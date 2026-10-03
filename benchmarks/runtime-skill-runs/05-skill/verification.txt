@@ -1,0 +1,3 @@
+=== coordinator verification rerun (05-skill) ===
+cwd: /d/Desktop/study/agent-coding-runtime-skill-bench/05-skill/benchmarks/cases/05-vue-state
+VERIFICATION UNAVAILABLE: TASK.md defines no verification command (case 05 has no automated harness).

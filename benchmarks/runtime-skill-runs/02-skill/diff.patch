@@ -1,0 +1,63 @@
+diff --git a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+index 583a0cf..9ddc5e0 100644
+--- a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
++++ b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+@@ -9,39 +9,47 @@ public final class AvailableRoomCriteriaAssembler {
+         if (query == null) {
+             return new AvailableRoomCriteria(
+                     null, null,
++
+                     null, null, null, null,
++
+                     null, null, null, null,
++
+                     List.of(), List.of(),
++
+                     List.of(), List.of(),
++
+                     List.of(), List.of(),
++
+                     true);
+         }
+ 
+         return new AvailableRoomCriteria(
+                 query.cityId(),
+                 query.districtId(),
++
+                 query.minRent(),
+                 query.maxRent(),
+                 query.excludedMinRent(),
+                 query.excludedMaxRent(),
++
+                 query.minArea(),
+                 query.maxArea(),
+                 query.excludedMinArea(),
+                 query.excludedMaxArea(),
+-                copyIntegers(query.floors()),
+-                copyIntegers(query.excludedFloors()),
+-                copyStrings(query.requiredFacilities()),
+-                copyStrings(query.excludedFacilities()),
+-                copyStrings(query.requiredLabels()),
+-                List.of(),
+-                false);
+-    }
+ 
+-    private static List<Integer> copyIntegers(List<Integer> values) {
+-        return values == null ? List.of() : new ArrayList<>(values);
++                copy(query.floors()),
++                copy(query.excludedFloors()),
++
++                copy(query.requiredFacilities()),
++                copy(query.excludedFacilities()),
++
++                copy(query.requiredLabels()),
++                copy(query.excludedLabels()),
++
++                false);
+     }
+ 
+-    private static List<String> copyStrings(List<String> values) {
++    private static <T> List<T> copy(List<T> values) {
+         return values == null ? List.of() : new ArrayList<>(values);
+     }
+ }

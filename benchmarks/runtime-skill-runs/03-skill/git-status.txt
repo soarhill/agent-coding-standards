@@ -1,0 +1,11 @@
+=== git status (post-worker) ===
+ M benchmarks/cases/03-error-null-contract/ProfileService.java
+ M benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java
+ M benchmarks/cases/03-error-null-contract/UserRpcService.java
+?? benchmarks/cases/03-error-null-contract/ProfileService.class
+?? benchmarks/cases/03-error-null-contract/ProfileServiceTest.class
+?? benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.class
+?? benchmarks/cases/03-error-null-contract/UserClient.class
+?? benchmarks/cases/03-error-null-contract/UserClientResponse.class
+?? benchmarks/cases/03-error-null-contract/UserDto.class
+?? benchmarks/cases/03-error-null-contract/UserRpcService.class

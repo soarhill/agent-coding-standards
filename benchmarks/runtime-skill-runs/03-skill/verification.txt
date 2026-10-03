@@ -1,0 +1,5 @@
+=== coordinator verification rerun (03-skill) ===
+cwd: /d/Desktop/study/agent-coding-runtime-skill-bench/03-skill/benchmarks/cases/03-error-null-contract
+command: javac *.java && java ProfileServiceTest
+PASS
+EXIT: 0

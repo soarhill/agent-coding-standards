@@ -1,0 +1,2 @@
+=== git status (post-worker) ===
+ M benchmarks/cases/05-vue-state/KnowledgeFiles.vue

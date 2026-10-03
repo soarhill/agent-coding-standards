@@ -1,0 +1,15 @@
+=== coordinator verification rerun (04-base) ===
+cwd: /d/Desktop/study/agent-coding-runtime-skill-bench/04-base/benchmarks/cases/04-promise-sse
+command: node --test chat-session.test.mjs
+✔ sendMessage stays loading until the SSE promise completes (1.145ms)
+✔ sendMessage reports async failure (0.1983ms)
+✔ closeSSE aborts the active request (0.2502ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 104.2267
+EXIT: 0

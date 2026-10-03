@@ -1,0 +1,2 @@
+=== git status (post-worker) ===
+ M benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java

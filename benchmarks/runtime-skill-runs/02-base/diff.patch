@@ -1,0 +1,113 @@
+diff --git a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+index 583a0cf..4981e13 100644
+--- a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
++++ b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+@@ -1,40 +1,84 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++/**
++ * Maps a {@link RoomCandidateQuery} to an {@link AvailableRoomCriteria}.
++ *
++ * Mapping convention (keep it when adding fields): every component of
++ * {@code AvailableRoomCriteria} is assigned to a local variable named exactly
++ * after that component, in record declaration order, and the constructor call
++ * passes those variables one per line in the same order. Each mapping line
++ * must read {@code component = query.component()} (wrapped in a copy helper
++ * for collections) - any line that does not, such as a stray
++ * {@code List.of()}, stands out in review instead of hiding inside a long
++ * positional argument list.
++ */
+ public final class AvailableRoomCriteriaAssembler {
+     private AvailableRoomCriteriaAssembler() {
+     }
+ 
+     public static AvailableRoomCriteria from(RoomCandidateQuery query) {
+         if (query == null) {
+-            return new AvailableRoomCriteria(
+-                    null, null,
+-                    null, null, null, null,
+-                    null, null, null, null,
+-                    List.of(), List.of(),
+-                    List.of(), List.of(),
+-                    List.of(), List.of(),
+-                    true);
++            return empty();
+         }
+ 
++        Long cityId = query.cityId();
++        Long districtId = query.districtId();
++        Integer minRent = query.minRent();
++        Integer maxRent = query.maxRent();
++        Integer excludedMinRent = query.excludedMinRent();
++        Integer excludedMaxRent = query.excludedMaxRent();
++        Integer minArea = query.minArea();
++        Integer maxArea = query.maxArea();
++        Integer excludedMinArea = query.excludedMinArea();
++        Integer excludedMaxArea = query.excludedMaxArea();
++        List<Integer> floors = copyIntegers(query.floors());
++        List<Integer> excludedFloors = copyIntegers(query.excludedFloors());
++        List<String> requiredFacilities = copyStrings(query.requiredFacilities());
++        List<String> excludedFacilities = copyStrings(query.excludedFacilities());
++        List<String> requiredLabels = copyStrings(query.requiredLabels());
++        List<String> excludedLabels = copyStrings(query.excludedLabels());
++        boolean impossible = false;
++
+         return new AvailableRoomCriteria(
+-                query.cityId(),
+-                query.districtId(),
+-                query.minRent(),
+-                query.maxRent(),
+-                query.excludedMinRent(),
+-                query.excludedMaxRent(),
+-                query.minArea(),
+-                query.maxArea(),
+-                query.excludedMinArea(),
+-                query.excludedMaxArea(),
+-                copyIntegers(query.floors()),
+-                copyIntegers(query.excludedFloors()),
+-                copyStrings(query.requiredFacilities()),
+-                copyStrings(query.excludedFacilities()),
+-                copyStrings(query.requiredLabels()),
++                cityId,
++                districtId,
++                minRent,
++                maxRent,
++                excludedMinRent,
++                excludedMaxRent,
++                minArea,
++                maxArea,
++                excludedMinArea,
++                excludedMaxArea,
++                floors,
++                excludedFloors,
++                requiredFacilities,
++                excludedFacilities,
++                requiredLabels,
++                excludedLabels,
++                impossible);
++    }
++
++    private static AvailableRoomCriteria empty() {
++        return new AvailableRoomCriteria(
++                null,
++                null,
++                null,
++                null,
++                null,
++                null,
++                null,
++                null,
++                null,
++                null,
++                List.of(),
++                List.of(),
++                List.of(),
++                List.of(),
++                List.of(),
+                 List.of(),
+-                false);
++                true);
+     }
+ 
+     private static List<Integer> copyIntegers(List<Integer> values) {

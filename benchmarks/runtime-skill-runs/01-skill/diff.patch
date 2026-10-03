@@ -1,0 +1,95 @@
+diff --git a/benchmarks/cases/01-complex-validation/RecommendationCriteriaNormalizer.java b/benchmarks/cases/01-complex-validation/RecommendationCriteriaNormalizer.java
+index 27ee7d4..e72f513 100644
+--- a/benchmarks/cases/01-complex-validation/RecommendationCriteriaNormalizer.java
++++ b/benchmarks/cases/01-complex-validation/RecommendationCriteriaNormalizer.java
+@@ -1,41 +1,70 @@
+ import java.util.List;
+ 
+ public final class RecommendationCriteriaNormalizer {
++    private static final int MAX_CATEGORY_LENGTH = 80;
++    private static final int MAX_KEYWORD_LENGTH = 160;
++    private static final int MAX_STYLE_LENGTH = 80;
++    private static final int MAX_PRIORITY_COUNT = 5;
++    private static final int MAX_PRIORITY_LENGTH = 80;
++    private static final int DEFAULT_LIMIT = 4;
+     private static final int MAX_RESULTS = 20;
+ 
+     private RecommendationCriteriaNormalizer() {
+     }
+ 
+     public static RecommendationCriteria normalize(RecommendationCriteria input) {
+-        if (input == null
+-                || !hasText(input.category())
+-                || input.category().length() > 80
+-                || tooLong(input.keyword(), 160)
+-                || tooLong(input.style(), 80)
+-                || (input.minPriceYuan() != null && input.minPriceYuan() < 0)
+-                || (input.maxPriceYuan() != null && input.maxPriceYuan() < 0)
+-                || (input.minPriceYuan() != null && input.maxPriceYuan() != null
+-                    && input.minPriceYuan() > input.maxPriceYuan())
+-                || (input.priorities() != null && (input.priorities().size() > 5
+-                    || input.priorities().stream().anyMatch(value -> tooLong(value, 80))))) {
++        if (isInvalid(input)) {
+             throw new BusinessException("INVALID_CRITERIA");
+         }
+ 
+-        List<String> priorities = input.priorities() == null
+-                ? List.of()
+-                : input.priorities().stream()
+-                    .filter(RecommendationCriteriaNormalizer::hasText)
+-                    .map(String::trim)
+-                    .toList();
+-
+         return new RecommendationCriteria(
+                 input.category().trim(),
+                 trimToNull(input.keyword()),
+                 input.minPriceYuan(),
+                 input.maxPriceYuan(),
+                 trimToNull(input.style()),
+-                priorities,
+-                Math.max(1, Math.min(MAX_RESULTS, input.limit() <= 0 ? 4 : input.limit())));
++                normalizedPriorities(input.priorities()),
++                normalizedLimit(input.limit()));
++    }
++
++    private static boolean isInvalid(RecommendationCriteria input) {
++        return input == null
++                || categoryIsInvalid(input.category())
++                || tooLong(input.keyword(), MAX_KEYWORD_LENGTH)
++                || tooLong(input.style(), MAX_STYLE_LENGTH)
++                || priceRangeIsInvalid(input.minPriceYuan(), input.maxPriceYuan())
++                || prioritiesAreInvalid(input.priorities());
++    }
++
++    private static boolean categoryIsInvalid(String category) {
++        return !hasText(category) || category.length() > MAX_CATEGORY_LENGTH;
++    }
++
++    private static boolean priceRangeIsInvalid(Integer minPriceYuan, Integer maxPriceYuan) {
++        return (minPriceYuan != null && minPriceYuan < 0)
++                || (maxPriceYuan != null && maxPriceYuan < 0)
++                || (minPriceYuan != null && maxPriceYuan != null
++                    && minPriceYuan > maxPriceYuan);
++    }
++
++    private static boolean prioritiesAreInvalid(List<String> priorities) {
++        return priorities != null
++                && (priorities.size() > MAX_PRIORITY_COUNT
++                    || priorities.stream().anyMatch(value -> tooLong(value, MAX_PRIORITY_LENGTH)));
++    }
++
++    private static List<String> normalizedPriorities(List<String> priorities) {
++        if (priorities == null) {
++            return List.of();
++        }
++        return priorities.stream()
++                .filter(RecommendationCriteriaNormalizer::hasText)
++                .map(String::trim)
++                .toList();
++    }
++
++    private static int normalizedLimit(int limit) {
++        return limit <= 0 ? DEFAULT_LIMIT : Math.min(MAX_RESULTS, limit);
+     }
+ 
+     private static boolean tooLong(String value, int max) {

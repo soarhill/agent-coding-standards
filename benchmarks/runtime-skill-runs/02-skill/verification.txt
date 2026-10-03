@@ -1,0 +1,5 @@
+=== coordinator verification rerun (02-skill) ===
+cwd: /d/Desktop/study/agent-coding-runtime-skill-bench/02-skill/benchmarks/cases/02-mechanical-mapping
+command: javac *.java && java AvailableRoomCriteriaAssemblerTest
+PASS
+EXIT: 0

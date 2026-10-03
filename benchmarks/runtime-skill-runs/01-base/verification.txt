@@ -1,0 +1,5 @@
+=== coordinator verification rerun (01-base) ===
+cwd: /d/Desktop/study/agent-coding-runtime-skill-bench/01-base/benchmarks/cases/01-complex-validation
+command: javac *.java && java RecommendationCriteriaNormalizerTest
+PASS
+EXIT: 0

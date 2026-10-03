@@ -1,0 +1,52 @@
+diff --git a/benchmarks/cases/05-vue-state/KnowledgeFiles.vue b/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
+index 4be50ed..e69c2a5 100644
+--- a/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
++++ b/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
+@@ -1,19 +1,19 @@
+ <template>
+   <div>
+     <div
+-      v-for="(file, index) in files"
+-      :key="index"
++      v-for="file in files"
++      :key="file.id"
+       class="row"
+     >
+       <span>{{ file.fileName }}</span>
+-      <span>{{ tableStatusText(file.status) }}</span>
++      <span>{{ statusText(file.status) }}</span>
+       <input v-model="file.note" />
+       <button @click="openEdit(file)">Edit</button>
+     </div>
+ 
+     <div v-if="editingFile">
+       <h3>Edit {{ editingFile.fileName }}</h3>
+-      <p>Status: {{ editStatusText(editingFile.status) }}</p>
++      <p>Status: {{ statusText(editingFile.status) }}</p>
+       <button @click="editingFile = null">Close</button>
+     </div>
+   </div>
+@@ -32,7 +32,7 @@ const files = ref([
+ 
+ const editingFile = ref(null)
+ 
+-function tableStatusText(status) {
++function statusText(status) {
+   if (status === 0) return 'Uploading'
+   if (status === 1) return 'Pending'
+   if (status === 2) return 'Vectorizing'
+@@ -41,14 +41,6 @@ function tableStatusText(status) {
+   return 'Unknown'
+ }
+ 
+-function editStatusText(status) {
+-  if (status === 0) return 'Pending'
+-  if (status === 1) return 'Vectorizing'
+-  if (status === 2) return 'Completed'
+-  if (status === 3) return 'Failed'
+-  return 'Unknown'
+-}
+-
+ function openEdit(file) {
+   editingFile.value = file
+ }

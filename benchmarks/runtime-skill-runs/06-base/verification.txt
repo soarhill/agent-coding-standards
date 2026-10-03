@@ -1,0 +1,5 @@
+=== coordinator verification rerun (06-base) ===
+cwd: /d/Desktop/study/agent-coding-runtime-skill-bench/06-base/benchmarks/cases/06-scope-control
+command: javac *.java && java OrderServiceTest
+PASS
+EXIT: 0

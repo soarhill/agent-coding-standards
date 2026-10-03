@@ -1,0 +1,10 @@
+=== git status (post-worker) ===
+ M benchmarks/cases/06-scope-control/OrderService.java
+?? benchmarks/cases/06-scope-control/DuplicateKeyException.class
+?? benchmarks/cases/06-scope-control/LegacyReportService.class
+?? benchmarks/cases/06-scope-control/Order.class
+?? benchmarks/cases/06-scope-control/OrderRepository.class
+?? benchmarks/cases/06-scope-control/OrderService.class
+?? benchmarks/cases/06-scope-control/OrderServiceTest$InMemoryRepo.class
+?? benchmarks/cases/06-scope-control/OrderServiceTest.class
+?? benchmarks/cases/06-scope-control/OrderStatus.class
