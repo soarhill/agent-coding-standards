@@ -32,11 +32,17 @@ agent-coding-standards/
 │   └── README.md
 ├── standards/
 │   └── candidate-rules.md
+├── benchmarks/
+│   ├── README.md
+│   ├── rubric.md
+│   ├── cases/
+│   │   └── 01...06
+│   └── runs/
 └── skill/
     └── README.md
 ```
 
-The original disputed-rule validation is complete. The next step is to calibrate the rules on real Agent coding tasks before freezing the final SKILL.md.
+The original disputed-rule validation is complete. A six-case A/B benchmark suite is now available under `benchmarks/` to calibrate the rules on real Agent coding tasks before freezing the final `SKILL.md`.
 
 ## Design principles
 
