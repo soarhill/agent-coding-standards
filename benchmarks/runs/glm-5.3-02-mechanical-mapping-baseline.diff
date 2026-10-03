@@ -1,0 +1,206 @@
+diff --git a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+index 583a0cf..418ba47 100644
+--- a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
++++ b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+@@ -7,34 +7,30 @@ public final class AvailableRoomCriteriaAssembler {
+ 
+     public static AvailableRoomCriteria from(RoomCandidateQuery query) {
+         if (query == null) {
+-            return new AvailableRoomCriteria(
+-                    null, null,
+-                    null, null, null, null,
+-                    null, null, null, null,
+-                    List.of(), List.of(),
+-                    List.of(), List.of(),
+-                    List.of(), List.of(),
+-                    true);
+-        }
+-
+-        return new AvailableRoomCriteria(
+-                query.cityId(),
+-                query.districtId(),
+-                query.minRent(),
+-                query.maxRent(),
+-                query.excludedMinRent(),
+-                query.excludedMaxRent(),
+-                query.minArea(),
+-                query.maxArea(),
+-                query.excludedMinArea(),
+-                query.excludedMaxArea(),
+-                copyIntegers(query.floors()),
+-                copyIntegers(query.excludedFloors()),
+-                copyStrings(query.requiredFacilities()),
+-                copyStrings(query.excludedFacilities()),
+-                copyStrings(query.requiredLabels()),
+-                List.of(),
+-                false);
++            return new CriteriaBuilder()
++                    .impossible(true)
++                    .build();
++        }
++
++        return new CriteriaBuilder()
++                .cityId(query.cityId())
++                .districtId(query.districtId())
++                .minRent(query.minRent())
++                .maxRent(query.maxRent())
++                .excludedMinRent(query.excludedMinRent())
++                .excludedMaxRent(query.excludedMaxRent())
++                .minArea(query.minArea())
++                .maxArea(query.maxArea())
++                .excludedMinArea(query.excludedMinArea())
++                .excludedMaxArea(query.excludedMaxArea())
++                .floors(copyIntegers(query.floors()))
++                .excludedFloors(copyIntegers(query.excludedFloors()))
++                .requiredFacilities(copyStrings(query.requiredFacilities()))
++                .excludedFacilities(copyStrings(query.excludedFacilities()))
++                .requiredLabels(copyStrings(query.requiredLabels()))
++                .excludedLabels(copyStrings(query.excludedLabels()))
++                .impossible(false)
++                .build();
+     }
+ 
+     private static List<Integer> copyIntegers(List<Integer> values) {
+@@ -44,4 +40,142 @@ public final class AvailableRoomCriteriaAssembler {
+     private static List<String> copyStrings(List<String> values) {
+         return values == null ? List.of() : new ArrayList<>(values);
+     }
++
++    /**
++     * Field-by-field builder so each mapping in {@link #from} names the target
++     * field; a missing or misplaced field is visible in the diff instead of
++     * being one anonymous argument among many.
++     *
++     * When a field is added to AvailableRoomCriteria (and RoomCandidateQuery):
++     * add the field and setter here, add one named mapping line in {@link #from},
++     * and add one argument in {@link #build()} - the compiler points at the
++     * latter until it matches the record.
++     *
++     * Field order mirrors the AvailableRoomCriteria components.
++     */
++    private static final class CriteriaBuilder {
++        private Long cityId;
++        private Long districtId;
++        private Integer minRent;
++        private Integer maxRent;
++        private Integer excludedMinRent;
++        private Integer excludedMaxRent;
++        private Integer minArea;
++        private Integer maxArea;
++        private Integer excludedMinArea;
++        private Integer excludedMaxArea;
++        private List<Integer> floors = List.of();
++        private List<Integer> excludedFloors = List.of();
++        private List<String> requiredFacilities = List.of();
++        private List<String> excludedFacilities = List.of();
++        private List<String> requiredLabels = List.of();
++        private List<String> excludedLabels = List.of();
++        private boolean impossible;
++
++        CriteriaBuilder cityId(Long value) {
++            this.cityId = value;
++            return this;
++        }
++
++        CriteriaBuilder districtId(Long value) {
++            this.districtId = value;
++            return this;
++        }
++
++        CriteriaBuilder minRent(Integer value) {
++            this.minRent = value;
++            return this;
++        }
++
++        CriteriaBuilder maxRent(Integer value) {
++            this.maxRent = value;
++            return this;
++        }
++
++        CriteriaBuilder excludedMinRent(Integer value) {
++            this.excludedMinRent = value;
++            return this;
++        }
++
++        CriteriaBuilder excludedMaxRent(Integer value) {
++            this.excludedMaxRent = value;
++            return this;
++        }
++
++        CriteriaBuilder minArea(Integer value) {
++            this.minArea = value;
++            return this;
++        }
++
++        CriteriaBuilder maxArea(Integer value) {
++            this.maxArea = value;
++            return this;
++        }
++
++        CriteriaBuilder excludedMinArea(Integer value) {
++            this.excludedMinArea = value;
++            return this;
++        }
++
++        CriteriaBuilder excludedMaxArea(Integer value) {
++            this.excludedMaxArea = value;
++            return this;
++        }
++
++        CriteriaBuilder floors(List<Integer> value) {
++            this.floors = value;
++            return this;
++        }
++
++        CriteriaBuilder excludedFloors(List<Integer> value) {
++            this.excludedFloors = value;
++            return this;
++        }
++
++        CriteriaBuilder requiredFacilities(List<String> value) {
++            this.requiredFacilities = value;
++            return this;
++        }
++
++        CriteriaBuilder excludedFacilities(List<String> value) {
++            this.excludedFacilities = value;
++            return this;
++        }
++
++        CriteriaBuilder requiredLabels(List<String> value) {
++            this.requiredLabels = value;
++            return this;
++        }
++
++        CriteriaBuilder excludedLabels(List<String> value) {
++            this.excludedLabels = value;
++            return this;
++        }
++
++        CriteriaBuilder impossible(boolean value) {
++            this.impossible = value;
++            return this;
++        }
++
++        AvailableRoomCriteria build() {
++            return new AvailableRoomCriteria(
++                    cityId,
++                    districtId,
++                    minRent,
++                    maxRent,
++                    excludedMinRent,
++                    excludedMaxRent,
++                    minArea,
++                    maxArea,
++                    excludedMinArea,
++                    excludedMaxArea,
++                    floors,
++                    excludedFloors,
++                    requiredFacilities,
++                    excludedFacilities,
++                    requiredLabels,
++                    excludedLabels,
++                    impossible);
++        }
++    }
+ }

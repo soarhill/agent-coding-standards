@@ -1,0 +1,39 @@
+diff --git a/benchmarks/cases/05-vue-state/KnowledgeFiles.vue b/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
+index 4be50ed..990fad2 100644
+--- a/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
++++ b/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
+@@ -1,8 +1,8 @@
+ <template>
+   <div>
+     <div
+-      v-for="(file, index) in files"
+-      :key="index"
++      v-for="file in files"
++      :key="file.id"
+       class="row"
+     >
+       <span>{{ file.fileName }}</span>
+@@ -13,7 +13,7 @@
+ 
+     <div v-if="editingFile">
+       <h3>Edit {{ editingFile.fileName }}</h3>
+-      <p>Status: {{ editStatusText(editingFile.status) }}</p>
++      <p>Status: {{ tableStatusText(editingFile.status) }}</p>
+       <button @click="editingFile = null">Close</button>
+     </div>
+   </div>
+@@ -41,14 +41,6 @@ function tableStatusText(status) {
+   return 'Unknown'
+ }
+ 
+-function editStatusText(status) {
+-  if (status === 0) return 'Pending'
+-  if (status === 1) return 'Vectorizing'
+-  if (status === 2) return 'Completed'
+-  if (status === 3) return 'Failed'
+-  return 'Unknown'
+-}
+-
+ function openEdit(file) {
+   editingFile.value = file
+ }

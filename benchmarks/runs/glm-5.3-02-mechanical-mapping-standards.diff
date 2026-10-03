@@ -1,0 +1,95 @@
+diff --git a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+index 583a0cf..9e64b46 100644
+--- a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
++++ b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+@@ -7,41 +7,63 @@ public final class AvailableRoomCriteriaAssembler {
+ 
+     public static AvailableRoomCriteria from(RoomCandidateQuery query) {
+         if (query == null) {
+-            return new AvailableRoomCriteria(
+-                    null, null,
+-                    null, null, null, null,
+-                    null, null, null, null,
+-                    List.of(), List.of(),
+-                    List.of(), List.of(),
+-                    List.of(), List.of(),
+-                    true);
++            return absent();
+         }
+ 
++        // Mapping below follows AvailableRoomCriteria component order one by one;
++        // a field added to the records must be mapped on this path, not defaulted here.
++        Long cityId = query.cityId();
++        Long districtId = query.districtId();
++        Integer minRent = query.minRent();
++        Integer maxRent = query.maxRent();
++        Integer excludedMinRent = query.excludedMinRent();
++        Integer excludedMaxRent = query.excludedMaxRent();
++        Integer minArea = query.minArea();
++        Integer maxArea = query.maxArea();
++        Integer excludedMinArea = query.excludedMinArea();
++        Integer excludedMaxArea = query.excludedMaxArea();
++        List<Integer> floors = copyOf(query.floors());
++        List<Integer> excludedFloors = copyOf(query.excludedFloors());
++        List<String> requiredFacilities = copyOf(query.requiredFacilities());
++        List<String> excludedFacilities = copyOf(query.excludedFacilities());
++        List<String> requiredLabels = copyOf(query.requiredLabels());
++        List<String> excludedLabels = copyOf(query.excludedLabels());
+         return new AvailableRoomCriteria(
+-                query.cityId(),
+-                query.districtId(),
+-                query.minRent(),
+-                query.maxRent(),
+-                query.excludedMinRent(),
+-                query.excludedMaxRent(),
+-                query.minArea(),
+-                query.maxArea(),
+-                query.excludedMinArea(),
+-                query.excludedMaxArea(),
+-                copyIntegers(query.floors()),
+-                copyIntegers(query.excludedFloors()),
+-                copyStrings(query.requiredFacilities()),
+-                copyStrings(query.excludedFacilities()),
+-                copyStrings(query.requiredLabels()),
+-                List.of(),
++                cityId,
++                districtId,
++                minRent,
++                maxRent,
++                excludedMinRent,
++                excludedMaxRent,
++                minArea,
++                maxArea,
++                excludedMinArea,
++                excludedMaxArea,
++                floors,
++                excludedFloors,
++                requiredFacilities,
++                excludedFacilities,
++                requiredLabels,
++                excludedLabels,
+                 false);
+     }
+ 
+-    private static List<Integer> copyIntegers(List<Integer> values) {
+-        return values == null ? List.of() : new ArrayList<>(values);
++    // Deliberate fallback for a null query: no constraints are carried
++    // (scalars null, lists empty) and the criteria is marked impossible.
++    private static AvailableRoomCriteria absent() {
++        return new AvailableRoomCriteria(
++                null, null,
++                null, null, null, null,
++                null, null, null, null,
++                List.of(), List.of(),
++                List.of(), List.of(),
++                List.of(), List.of(),
++                true);
+     }
+ 
+-    private static List<String> copyStrings(List<String> values) {
++    // Defensive copy: later mutation of the query must not change built criteria;
++    // a missing list is an empty list, not null.
++    private static <T> List<T> copyOf(List<T> values) {
+         return values == null ? List.of() : new ArrayList<>(values);
+     }
+ }

@@ -1,0 +1,62 @@
+diff --git a/benchmarks/cases/05-vue-state/KnowledgeFiles.vue b/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
+index 4be50ed..868a6b2 100644
+--- a/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
++++ b/benchmarks/cases/05-vue-state/KnowledgeFiles.vue
+@@ -1,19 +1,19 @@
+ <template>
+   <div>
+     <div
+-      v-for="(file, index) in files"
+-      :key="index"
++      v-for="file in files"
++      :key="file.id"
+       class="row"
+     >
+       <span>{{ file.fileName }}</span>
+-      <span>{{ tableStatusText(file.status) }}</span>
++      <span>{{ statusText(file.status) }}</span>
+       <input v-model="file.note" />
+       <button @click="openEdit(file)">Edit</button>
+     </div>
+ 
+     <div v-if="editingFile">
+       <h3>Edit {{ editingFile.fileName }}</h3>
+-      <p>Status: {{ editStatusText(editingFile.status) }}</p>
++      <p>Status: {{ statusText(editingFile.status) }}</p>
+       <button @click="editingFile = null">Close</button>
+     </div>
+   </div>
+@@ -32,21 +32,20 @@ const files = ref([
+ 
+ const editingFile = ref(null)
+ 
+-function tableStatusText(status) {
+-  if (status === 0) return 'Uploading'
+-  if (status === 1) return 'Pending'
+-  if (status === 2) return 'Vectorizing'
+-  if (status === 3) return 'Completed'
+-  if (status === 4) return 'Failed'
+-  return 'Unknown'
++// Single authoritative mapping of backend file status codes to display text,
++// shared by the table and the edit dialog.
++// Backend contract (codes must not change): 0 Uploading, 1 Pending,
++// 2 Vectorizing, 3 Completed, 4 Failed. Any other code is rendered as Unknown.
++const STATUS_TEXT = {
++  0: 'Uploading',
++  1: 'Pending',
++  2: 'Vectorizing',
++  3: 'Completed',
++  4: 'Failed',
+ }
+ 
+-function editStatusText(status) {
+-  if (status === 0) return 'Pending'
+-  if (status === 1) return 'Vectorizing'
+-  if (status === 2) return 'Completed'
+-  if (status === 3) return 'Failed'
+-  return 'Unknown'
++function statusText(status) {
++  return STATUS_TEXT[status] ?? 'Unknown'
+ }
+ 
+ function openEdit(file) {

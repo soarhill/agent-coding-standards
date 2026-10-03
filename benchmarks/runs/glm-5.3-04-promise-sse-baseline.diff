@@ -1,0 +1,48 @@
+diff --git a/benchmarks/cases/04-promise-sse/chat-session.js b/benchmarks/cases/04-promise-sse/chat-session.js
+index af5fca7..e58f448 100644
+--- a/benchmarks/cases/04-promise-sse/chat-session.js
++++ b/benchmarks/cases/04-promise-sse/chat-session.js
+@@ -1,4 +1,4 @@
+-let eventSource = null;
++let activeController = null;
+ 
+ export async function sendMessage({
+   fetchEventSource,
+@@ -10,9 +10,10 @@ export async function sendMessage({
+ }) {
+   setLoading(true);
+   const controller = new AbortController();
++  activeController = controller;
+ 
+   try {
+-    fetchEventSource(url, {
++    await fetchEventSource(url, {
+       method: "POST",
+       body: JSON.stringify(payload),
+       signal: controller.signal,
+@@ -21,14 +22,22 @@ export async function sendMessage({
+       },
+     });
+   } catch (error) {
+-    setError(error.message);
++    // An abort triggered by closeSSE() is an intentional shutdown, not a UI error.
++    if (!controller.signal.aborted) {
++      setError(error.message);
++    }
+   } finally {
++    if (activeController === controller) {
++      activeController = null;
++    }
+     setLoading(false);
+   }
+ }
+ 
+ export function closeSSE() {
+-  if (eventSource) {
+-    eventSource.close();
++  if (activeController) {
++    const controller = activeController;
++    activeController = null;
++    controller.abort();
+   }
+ }

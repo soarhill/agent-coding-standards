@@ -1,0 +1,18 @@
+diff --git a/benchmarks/cases/06-scope-control/OrderService.java b/benchmarks/cases/06-scope-control/OrderService.java
+index d3a0b57..09dd439 100644
+--- a/benchmarks/cases/06-scope-control/OrderService.java
++++ b/benchmarks/cases/06-scope-control/OrderService.java
+@@ -14,6 +14,13 @@ public class OrderService {
+                 throw new IllegalStateException("duplicate key but order not found");
+             }
+ 
++            // Duplicate create message: never regress an order that already
++            // reached a terminal state (paid or cancelled).
++            if (existing.getStatus() == OrderStatus.PAID
++                    || existing.getStatus() == OrderStatus.CANCELLED) {
++                return;
++            }
++
+             repository.updateStatus(orderNo, OrderStatus.PENDING_PAYMENT);
+         }
+     }

@@ -1,0 +1,114 @@
+diff --git a/benchmarks/cases/03-error-null-contract/ProfileService.java b/benchmarks/cases/03-error-null-contract/ProfileService.java
+index ba6dedc..68d2c5d 100644
+--- a/benchmarks/cases/03-error-null-contract/ProfileService.java
++++ b/benchmarks/cases/03-error-null-contract/ProfileService.java
+@@ -5,8 +5,23 @@ public class ProfileService {
+         this.userRpcService = userRpcService;
+     }
+ 
++    /**
++     * Display name for the given user.
++     *
++     * Contract:
++     * <ul>
++     *   <li>the user's nickname when the user exists</li>
++     *   <li>"Anonymous" when the user genuinely does not exist (or has no nickname)</li>
++     *   <li>throws {@link UpstreamUserServiceException} when the upstream user service
++     *       failed, so a failure is never confused with a missing user</li>
++     * </ul>
++     *
++     * Never returns null.
++     */
+     public String getDisplayName(long userId) {
+-        UserDto user = userRpcService.findUser(userId);
+-        return user.nickname();
++        return userRpcService
++                .findUser(userId)
++                .map(UserDto::nickname)
++                .orElse("Anonymous");
+     }
+ }
+diff --git a/benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java b/benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java
+index 0198be4..3a4b991 100644
+--- a/benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java
++++ b/benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java
+@@ -2,4 +2,8 @@ public class UpstreamUserServiceException extends RuntimeException {
+     public UpstreamUserServiceException(String message) {
+         super(message);
+     }
++
++    public UpstreamUserServiceException(String message, Throwable cause) {
++        super(message, cause);
++    }
+ }
+diff --git a/benchmarks/cases/03-error-null-contract/UserRpcService.java b/benchmarks/cases/03-error-null-contract/UserRpcService.java
+index 2b023a2..a30a0da 100644
+--- a/benchmarks/cases/03-error-null-contract/UserRpcService.java
++++ b/benchmarks/cases/03-error-null-contract/UserRpcService.java
+@@ -1,3 +1,5 @@
++import java.util.Optional;
++
+ public class UserRpcService {
+     private final UserClient userClient;
+ 
+@@ -5,19 +7,49 @@ public class UserRpcService {
+         this.userClient = userClient;
+     }
+ 
+-    public UserDto findUser(long id) {
++    /**
++     * Looks up a user by id.
++     *
++     * Contract:
++     * <ul>
++     *   <li>returns the user when the upstream lookup succeeds and the user exists</li>
++     *   <li>returns empty when the upstream lookup succeeded and the user does not exist</li>
++     *   <li>throws {@link UpstreamUserServiceException} when the upstream service failed
++     *       (an error response, a malformed response, or a thrown exception), so a failure
++     *       can never be mistaken for "user not found"</li>
++     * </ul>
++     */
++    public Optional<UserDto> findUser(long id) {
++        UserClientResponse response;
+         try {
+-            UserClientResponse response = userClient.findById(id);
+-            if (response == null || !response.success()) {
+-                return null;
+-            }
+-            if (!response.found()) {
+-                return null;
+-            }
+-            return response.data();
++            response = userClient.findById(id);
+         } catch (RuntimeException e) {
+-            System.err.println("user lookup failed: " + e.getMessage());
+-            return null;
++            throw new UpstreamUserServiceException("user lookup for id " + id + " failed", e);
++        }
++
++        if (response == null || !response.success()) {
++            throw new UpstreamUserServiceException(
++                    "user lookup for id " + id + " failed: " + describeFailure(response));
++        }
++
++        if (!response.found()) {
++            return Optional.empty();
++        }
++
++        if (response.data() == null) {
++            throw new UpstreamUserServiceException(
++                    "user lookup for id " + id + " failed: response reports the user as found but carries no data");
++        }
++        return Optional.of(response.data());
++    }
++
++    private static String describeFailure(UserClientResponse response) {
++        if (response == null) {
++            return "upstream returned no response";
+         }
++        String message = response.errorMessage();
++        return (message == null || message.isBlank())
++                ? "upstream reported failure without a message"
++                : message;
+     }
+ }
