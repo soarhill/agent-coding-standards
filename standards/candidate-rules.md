@@ -1,876 +1,1029 @@
-# Candidate Coding Rules v0
+# Candidate Coding Rules v1
 
-> Status: **research synthesis, not final skill**
+> Status: **externally validated candidate standard, not final Skill**
 >
-> This document consolidates the two independent project reports and their cross-review. It intentionally separates hard defects from defaults, review signals, and team conventions.
+> v1 merges:
+> - two independent reviews of four tutorial codebases;
+> - the two cross-reviews;
+> - second-stage validation against official documentation and multiple independent mature repositories.
 >
-> **Observed ≠ Recommended.**
+> **Observed ≠ Recommended. Popular ≠ Correct.**
 >
-> A source example proves that a problem or pattern exists in the reviewed codebase. It does **not** automatically prove that one specific replacement is universally correct.
+> A project example can prove that a pattern exists. A framework document can prove a mechanism. Neither automatically proves that one implementation is the only maintainable choice.
 
 ---
 
-## 1. Rule strength
+# 1. How to read this document
+
+## 1.1 Rule strength
 
 ### MUST
 
-A violation is normally a correctness defect, contract break, misleading implementation, or a high-confidence engineering error.
+A correctness, contract, lifecycle, or high-confidence safety invariant.
 
-An agent should fix or avoid these unless the surrounding code establishes an explicit, documented exception.
+A MUST applies to code created or changed by the agent unless the task or repository establishes a real exception.
 
 ### SHOULD
 
-A strong default that usually improves maintainability or clarity, but depends on context.
+A strong maintainability default.
 
-An agent may deviate when it can explain why the local design is clearer or better aligned with repository conventions.
+A SHOULD may be overridden when the local design is clearer, the repository has a justified convention, or the task has constraints that make the default inappropriate.
 
 ### REVIEW TRIGGER
 
-A mechanical signal that tells the agent to stop and inspect the code.
+A signal to inspect code more carefully.
 
-A trigger does **not** mean “refactor automatically.” It means: evaluate responsibility, cognitive load, duplication, coupling, and whether a change would actually improve the code.
+A trigger does **not** authorize a refactor and does **not** mean the code is wrong.
 
 ### CONVENTION
 
-A consistency choice.
+A team/repository consistency choice, not universal engineering truth.
 
-Conventions can matter a lot inside one repository, but must not be presented as universal engineering truth.
+## 1.2 Evidence state is separate from rule strength
+
+Rule strength answers **how strongly the agent should obey the rule**.
+
+Evidence state answers **how confident we are in the basis for the rule**.
+
+Evidence states used here:
+
+- **VERIFIED_MECHANISM** — language/framework/library contract confirmed from official sources.
+- **VALIDATED_PRACTICE** — supported by official guidance plus multiple independent codebases, but still a design default.
+- **MAINTAINABILITY_CANDIDATE** — strong engineering reasoning, but not a mechanism-level fact.
+- **CONVENTION_ONLY** — consistency choice.
+- **UNCALIBRATED_TRIGGER** — useful review signal whose numeric threshold or false-positive rate has not yet been calibrated on agent tasks.
+
+## 1.3 Scope guardrail
+
+These standards **do not expand task scope by themselves**.
+
+Default behavior:
+
+- apply rules to new code, modified code, and directly related paths;
+- if unrelated legacy code violates a rule, note it rather than silently cleaning the repository;
+- a REVIEW TRIGGER means “inspect this area,” not “start a refactor”;
+- repository-local conventions win when they are reasonable and do not create a correctness or maintainability defect;
+- architecture redesign is out of scope unless the task explicitly asks for it.
+
+This scope rule is as important as the coding rules themselves.
 
 ---
 
 # 2. MUST — hard invariants
 
-## M-01. Never dereference before validating a nullable value
+## M-01. A nullable value needs a valid non-null guarantee before dereference
 
-Bad pattern:
+**Evidence:** VERIFIED_MECHANISM
 
-```java
-String reasoning = metadata.get("reasoningContent").toString();
+A non-null guarantee may come from:
 
-if (reasoning != null) {
-    ...
-}
-```
+- the type system;
+- validated input;
+- an earlier guard;
+- a proven control-flow branch;
+- a framework contract that is actually active.
 
-The check does not protect the dereference that already happened.
+Do **not** add redundant null checks merely to satisfy the rule.
 
-**Rule**
+What is forbidden:
 
-- Validate a nullable value before dereferencing it.
-- Check the object that will actually be accessed, not a nearby or similarly named object.
-- Do not add defensive null checks after the dangerous operation and treat that as safety.
-
-**Evidence from reviewed projects**
-
-- AI Robot: metadata value converted with `.toString()` before null handling.
-- Seckill: an object was dereferenced before a later null check.
-- Xiaohashu: a helper checked one map and dereferenced another.
+- dereference first, check later;
+- check a nearby object but dereference a different one;
+- assume a framework contract that is not actually active.
 
 ---
 
 ## M-02. Validation must be active on the real execution path
 
-A validation annotation that looks right but is imported from the wrong package is worse than no validation because it creates false confidence.
+**Evidence:** VERIFIED_MECHANISM
 
-**Rule**
+For Java/Spring validation:
 
-- When using declarative validation, verify the actual annotation/import and the framework entry point that activates it.
-- Container validation and element validation must both be considered when both matter.
-- DTO validation does not replace business-state validation.
+- use validation annotations from the intended validation/Spring packages;
+- confirm the execution path actually activates validation;
+- distinguish MVC parameter validation from Spring method validation;
+- remember that class-level method validation depends on Spring's validation/proxy mechanism;
+- container validation and element validation are separate concerns;
+- DTO shape validation does not replace database/business-state/authorization validation.
 
-**Evidence**
-
-- Weblog used a similarly named `@Validate` annotation from an unrelated library on a request path, so expected Spring validation did not run.
+For generated or edited validation code, import origin is part of the review.
 
 ---
 
-## M-03. Do not silently convert failure into success
+## M-03. Do not silently turn an unexpected failure into a normal success
 
-**Rule**
+**Evidence:** VERIFIED_MECHANISM + MAINTAINABILITY_CANDIDATE
 
-A catch block must have an explicit purpose:
+A catch/recovery branch must have an intentional contract:
 
-- recover with a documented fallback;
+- recover using a documented fallback;
 - translate while preserving the cause;
 - isolate a permitted partial failure;
 - or propagate.
 
-Do **not** catch an unexpected failure and then return `null`, `0`, `false`, an empty result, or a success response if that changes failure into an indistinguishable normal result.
+Do not make an unexpected failure indistinguishable from:
 
-Explicit fallback is allowed when it is part of the contract.
+- `null`;
+- `0`;
+- `false`;
+- an empty result;
+- a success response.
 
-**Good exception**
-
-A display-only stock parser may return a known fallback value when malformed cache text is intentionally tolerated.
-
-**Bad exception**
-
-A failed service/RPC call returns `null`, and callers later treat that as “entity absent.”
+A documented display fallback, best-effort branch, or deliberately degraded result is allowed.
 
 ---
 
-## M-04. Preserve failure causes when translating exceptions
+## M-04. Preserve causal information when translating unexpected failures
 
-**Rule**
+**Evidence:** VERIFIED_MECHANISM
 
-- When translating an unexpected exception, retain the original cause.
-- Do not use `e.printStackTrace()` in production code.
-- Do not throw a generic exception that erases the original context.
-- When interruption is caught, preserve the interruption contract where the platform requires it.
+When an unexpected failure is translated:
 
-**Evidence**
+- retain the original cause when the language/platform supports causal chaining;
+- do not replace a useful exception with a generic one that erases why it happened;
+- preserve interruption semantics where the platform requires it.
 
-- Seckill contains a positive example that restores the interrupt flag and preserves the cause while unwrapping `ExecutionException`.
+How the failure is printed/logged is a separate logging rule, not part of this invariant.
 
 ---
 
-## M-05. A function's completion contract must be truthful
+## M-05. Async completion and failure contracts must be truthful
 
-This applies especially to Promise/Future/reactive/streaming code.
+**Evidence:** VERIFIED_MECHANISM
 
-**Rule**
-
-If a caller is expected to await completion or catch failure, the function must return/await the real asynchronous operation.
+If a caller is expected to wait for completion or catch failure, the function must return/await/propagate the **real** asynchronous operation.
 
 Do not:
 
-- start a Promise-producing operation inside `try/catch` without returning or awaiting it and then assume the catch protects later rejection;
-- wrap an existing Promise in a new Promise without correctly resolving/rejecting it;
-- pass the result of an assignment to `.finally(...) ` instead of a callback;
-- report “completed” before the underlying operation has actually completed.
+- create a floating Promise and assume outer synchronous `try/catch` handles its later rejection;
+- wrap an existing Promise without correctly resolving/rejecting;
+- pass the result of an assignment/expression to `.finally(...)` when a callback is required;
+- report completion before the underlying async work is complete.
 
-**Evidence**
-
-- AI Robot front end contained a `fetchEventSource` call whose Promise was not connected to the outer `try/catch`.
-- Weblog contained a Promise wrapper whose resolve/reject functions were never called.
-- AI Robot contained a `.finally(deleteFlag = false)`-style misuse.
+Library-specific details still follow the actual library contract. For example, abort/retry behavior may differ between native fetch and an SSE helper.
 
 ---
 
-## M-06. Resource cleanup must operate on the real owned handle
+## M-06. Cleanup must operate on the real owned resource/handle
 
-**Rule**
+**Evidence:** VERIFIED_MECHANISM
 
-The component/method that owns a resource must retain the actual handle needed to release it at lifecycle end.
+The owner of a resource must retain whatever handle is actually required to release, cancel, close, restore, or unlock it.
 
 Examples:
 
-- ThreadLocal state → clear in `finally`;
-- lock → unlock only according to ownership contract;
-- stream/file → close in scope;
-- AbortController / listener / observer / timer → keep the actual reference and release/cancel it;
-- component teardown must not call a “cleanup” function that is disconnected from the real resource.
+- ThreadLocal/context state;
+- locks;
+- files/streams;
+- listeners/observers/timers;
+- AbortController/AbortSignal;
+- subscriptions.
 
-**Evidence**
+Cleanup must match the resource's real lifecycle.
 
-- Positive: ThreadLocal cleanup in Xiaohashu, scoped lock/file cleanup in Seckill/AI Robot.
-- Negative: an AI Robot SSE cleanup path referenced a handle that had never been connected to the active request.
+For nested context-like resources, decide whether the correct operation is **clear** or **restore previous value**; do not mechanically call `remove()` everywhere.
 
 ---
 
 ## M-07. One state/code must have one stable meaning inside the same contract
 
-**Rule**
+**Evidence:** VERIFIED_MECHANISM + MAINTAINABILITY_CANDIDATE
 
-- A status code must not map to different meanings in different views/components.
-- A field must not silently switch semantic meaning across layers.
-- Unknown states must have an explicit policy.
-- When a finite result set is known, success must not be inferred merely because no currently listed failure branch matched.
-
-**Evidence**
-
-- AI Robot front end had two conflicting status-code-to-label mappings.
-- Seckill had a known result state that was mapped at one boundary but not handled in the later order path.
+- A status code must not mean different things in different views.
+- A field must not silently change semantic meaning between layers.
+- Unknown states need an explicit policy.
+- A finite result set must not fall through to “success” merely because existing failure branches did not match.
 
 ---
 
-## M-08. Environment-specific values must not be hardcoded in business/UI code
+## M-08. Environment-specific values must not be hardcoded in business/UI logic
 
-**Rule**
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
-Move environment-dependent values behind configuration or an existing project-level configuration mechanism.
+Move deployment/environment values behind the repository's configuration mechanism.
 
-Examples:
+Typical examples:
 
-- backend base URLs;
-- IPs/hosts;
-- environment-specific service endpoints;
-- deploy-specific ports;
-- model/provider lists when they are runtime-owned configuration.
+- base URLs;
+- hosts/IPs;
+- environment-specific ports;
+- service endpoints;
+- runtime-owned provider/model lists.
 
-Do not confuse environment configuration with stable business constants.
-
-**Evidence**
-
-- Hardcoded localhost SSE URLs and a hardcoded public IP appeared in reviewed front-end code.
+Do not confuse deployment configuration with stable domain constants.
 
 ---
 
-## M-09. Remove dead code instead of commenting it out
+## M-09. Same domain absence/failure must preserve the same outward meaning across cache/DB paths
 
-**Rule**
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
-- Delete superseded implementation code; version control preserves history.
-- Do not use production `main()` methods as ad-hoc tests.
-- Test/debug controllers must be isolated from production exposure using the repository's accepted mechanism.
+If “entity missing” is one domain condition, a cache hit/miss must not randomly turn it into different outward semantics such as:
 
-**Evidence**
-
-All four projects contained commented-out historical implementation blocks or test-like code in production sources.
-
----
-
-## M-10. Logs must not expose secrets or create fake observability
-
-**Rule**
-
-- Never log passwords, access tokens, verification codes, or equivalent secrets.
-- Avoid blindly serializing full request/response objects when they may contain sensitive or very large data.
-- A log message must contain meaningful context; avoid empty-message logging such as `log.error("", e)`.
-- Hot paths such as per-stream-chunk/per-scroll/per-loop operations must not emit uncontrolled info-level logs.
-- If an exception is logged, use the logging API correctly so the exception/cause is preserved.
-
-**Evidence**
-
-The reviewed projects contained token/verification-code logging, full request/response logging, empty log messages, and per-SSE-chunk logging.
-
----
-
-## M-11. Protocol values must be decoded at a boundary with an explicit unknown-value policy
-
-**Rule**
-
-When interacting with Lua scripts, MQ payloads, external services, cache encodings, or similar boundaries:
-
-- translate protocol values into meaningful internal results once;
-- define what unknown values mean;
-- do not let bare numeric/string codes drift through the business layer;
-- do not invent fragile delimiter protocols when an existing typed/structured representation is available.
-
-**Evidence**
-
-- Positive: Seckill mapped Lua numeric results to meaningful enums.
-- Negative: another path used a hand-built delimiter string and manual `split`.
-
----
-
-## M-12. Same domain absence/failure must not change meaning depending on cache path
-
-**Rule**
-
-If “entity does not exist” is one domain condition, a cache hit/miss path must not randomly transform it between:
-
-- exception,
-- `null`,
-- success-with-null,
-- empty collection,
+- exception;
+- `null`;
+- success-with-null;
+- empty collection;
 - system failure.
 
-Choose the semantic contract first, then make cache/DB paths preserve it.
-
-**Evidence**
-
-The review found paths where DB-miss and cached-null produced different outward meanings.
+Choose the contract first; make cache and DB paths preserve it.
 
 ---
 
-## M-13. Conditional assignment must be deliberate, never accidental
+## M-10. Secret data must not be logged directly
 
-For JavaScript/TypeScript-style conditions, accidental assignment such as:
+**Evidence:** VERIFIED_MECHANISM / SECURITY GUIDANCE
+
+Do not directly log:
+
+- passwords;
+- access/session tokens;
+- verification codes;
+- encryption keys;
+- equivalent secrets.
+
+If observability requires an identifier, use an approved redacted/masked/hashed form.
+
+---
+
+## M-11. When using SLF4J-style parameterized logging, preserve throwable semantics
+
+**Evidence:** VERIFIED_MECHANISM
+
+For SLF4J:
+
+- pass the throwable in the position expected by the API so its stack trace is retained;
+- do not replace the throwable with `e.getMessage()` when stack/cause information is needed;
+- do not use an empty message as the exception log message.
+
+This is a Java/logging-API-specific invariant, not a universal syntax rule for every logging library.
+
+---
+
+## M-12. Protocol/encoded values need an explicit unknown-value policy
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+When decoding an external or low-level contract (Lua result, MQ field, cache encoding, external API code, etc.):
+
+- define what unknown/unsupported values mean;
+- do not silently interpret an unknown value as success;
+- preserve the external value when pass-through is the actual contract.
+
+Whether the internal representation is an enum, result object, primitive, or string is a design choice handled by SHOULD/TRIGGER rules.
+
+---
+
+## M-13. Accidental conditional assignment must not happen
+
+**Evidence:** VERIFIED_MECHANISM
+
+Accidental code such as:
 
 ```js
-if (e.success = true) {
-    ...
+if (result.success = true) {
+  ...
 }
 ```
 
-is a correctness bug.
+is a correctness defect.
 
-**Rule**
+Intentional assignment inside a condition can be legitimate when the language/style allows it and intent is explicit.
 
-- Do not use assignment as a condition in normal application code.
-- Enable the repository's static-analysis rule that catches accidental conditional assignment where available.
+For JS/TS repositories, enable a lint rule such as `no-cond-assign` according to the repository's lint setup.
 
 ---
 
-# 3. SHOULD — strong defaults, not universal laws
+## M-14. Java `Collectors.toMap` value mapping must not produce null
 
-## S-01. Prefer one clear task per method/component
+**Evidence:** VERIFIED_MECHANISM
+
+In the standard JDK implementation, `Collectors.toMap` ultimately relies on map/merge behavior that rejects null mapped values.
+
+If null values are legitimate data, use a collection strategy that represents them intentionally rather than relying on `toMap`.
+
+Duplicate-key behavior is a separate rule; do **not** mechanically add a merge function.
+
+---
+
+## M-15. Vue list/control-flow essentials must be respected
+
+**Evidence:** VERIFIED_MECHANISM / OFFICIAL ESSENTIAL GUIDANCE
+
+For Vue:
+
+- provide a stable `key` where the Vue contract/guidance requires keyed `v-for`;
+- do not place `v-if` and `v-for` on the same element.
+
+Using an array index as the key is **not** universally forbidden; see the review trigger below.
+
+---
+
+## M-16. Behavior-changing work must verify the relevant existing test signal when available
+
+**Evidence:** VALIDATED_PRACTICE
+
+If the repository has relevant automated tests that are runnable in the task environment:
+
+- run the affected/closest relevant tests after changing behavior;
+- report what was run and whether it passed;
+- if tests cannot be run, state that instead of implying verification.
+
+This rule does not require inventing a new test framework for repositories that do not have one.
+
+---
+
+# 3. SHOULD — strong defaults
+
+## S-01. Prefer one coherent task per method/component
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
 A unit should be explainable with one coherent responsibility.
 
-Prefer extracting:
+Extract only when doing so creates meaningful names and lowers cognitive load.
 
-- a meaningful validation step;
-- a pure transformation;
-- an independently understandable business sub-step;
-- a resource lifecycle;
-- a reusable mapping rule.
-
-Do **not** extract a helper merely to reduce line count if the reader now has to jump around more.
+Do not split code merely to reduce line count.
 
 ---
 
-## S-02. Prefer guard clauses when they flatten simple failure paths
+## S-02. Prefer guard clauses when they make the main path easier to read
 
-Guard clauses are useful when they make the main flow read top-to-bottom.
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
-Do not force every branch into early return.
+Use early failure/return when it flattens simple preconditions.
 
-For finite state handling, completeness is often more important than flatness.
+Do not force every branch into guard-clause form.
+
+For finite states, completeness may matter more than flatness.
 
 ---
 
-## S-03. Prefer visible, auditable data mapping at boundaries
+## S-03. Keep important data mapping semantics visible and auditable
 
-A mapping should make important semantic changes easy to inspect:
+**Evidence:** VALIDATED_PRACTICE
+
+A mapping should make important changes reviewable:
 
 - renamed fields;
-- default values;
-- precision/unit changes;
+- defaults;
+- unit/precision changes;
 - missing-value policy;
 - type conversion.
 
-Use hand-written mapping, Builder, MapStruct, or another mechanism based on repetition and semantic complexity.
+Hand-written mapping, Builder, MapStruct, and other approaches are all valid when they preserve readability.
 
-Do not require a Converter class for every one-off mapping.
+If a project uses MapStruct:
+
+- explicitly choose an `unmappedTargetPolicy` instead of inheriting an accidental default;
+- treat `expression="java(...)"` as an escape hatch and keep important logic testable/visible.
+
+Do not require a Converter/Mapper class for every one-off transformation.
 
 ---
 
 ## S-04. Abstract shared concepts and shared change reasons, not merely similar syntax
 
-Two blocks that look similar are not automatically one abstraction.
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
-Extract when the pieces:
+Prefer abstraction when code shares:
 
-- represent the same concept;
-- are expected to evolve together;
-- share the same validation/transformation rule;
-- and become easier to understand after extraction.
+- the same concept;
+- the same reason to change;
+- the same validation/transformation rule;
+- compatible failure/data-ownership semantics.
 
-Avoid “universal” helpers with many booleans or configuration flags.
-
----
-
-## S-05. Prefer explicit dependency construction in ordinary service code
-
-Constructor injection is a strong candidate default for Spring service code because dependencies are visible at construction time.
-
-However this remains **pending external validation** for the final skill, including lifecycle/framework exceptions and how strongly it should be stated.
+Avoid “universal helpers” driven by many booleans/config flags.
 
 ---
 
-## S-06. Keep transport-layer concerns from leaking unnecessarily into business logic
+## S-05. Ordinary Spring components should default to constructor injection
 
-A service method should not return a web/HTTP wrapper merely because the controller uses one.
+**Evidence:** VALIDATED_PRACTICE
 
-However, do **not** reject a type only because it is named `Response` or `PageResponse`.
+Spring's own guidance generally advocates constructor injection for required dependencies.
 
-Review the actual semantics:
+Default:
 
-- Does it encode HTTP/presentation concerns?
-- Is it an application result type?
-- Is pagination itself part of the use-case contract?
-- Would the service still make sense outside the current transport?
+- required dependencies → constructor injection;
+- optional/reconfigurable dependencies → setter injection can be appropriate.
 
-This remains **pending external validation**.
+A constructor cycle is primarily a design signal, not a reason to automatically fall back to field injection.
+
+Manual constructor vs Lombok-generated constructor is a CONVENTION choice.
 
 ---
 
-## S-07. Use Stream for short, pure transformations; use direct loops when control flow is clearer
+## S-06. HTTP-specific semantics should stay at the HTTP adapter boundary
 
-Prefer Stream when it expresses an obvious mapping/filtering pipeline.
+**Evidence:** VALIDATED_PRACTICE
 
-Prefer a loop when the operation includes:
+HTTP-specific concepts such as:
 
-- multiple assignments;
+- status codes;
+- headers;
+- HTTP problem representations;
+- transport serialization annotations;
+
+should not leak into domain logic without a real reason.
+
+Application/use-case result objects named `Response`, `Result`, or `PageResponse` can be completely valid if they are transport-agnostic.
+
+Whether a service result type is a layering problem is handled by a REVIEW TRIGGER, not by name-based prohibition.
+
+---
+
+## S-07. Use Stream for short pure transformations; use direct loops when control flow is clearer
+
+**Evidence:** VALIDATED_PRACTICE
+
+Stream is a good fit for short, visible transformation/filter pipelines.
+
+Prefer a loop when code involves:
+
 - ordered side effects;
 - complex branching;
 - early break/continue;
 - IO;
-- mutable accumulation that becomes harder to reason about in lambdas.
+- multi-step mutable assembly.
 
 Do not optimize for “functional-looking” code.
 
 ---
 
-## S-08. Empty collection, missing entity, unknown state, and system failure should be modeled intentionally
+## S-08. Model empty, missing, unknown, and failed states intentionally
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
 Do not introduce `null` as an extra state when it adds no useful distinction.
 
-But do not mechanically replace every nullable result with `Optional`, empty objects, or empty collections.
+Do not mechanically replace every nullable result with `Optional`, empty objects, or empty collections.
 
-Choose based on the actual contract.
+Choose the contract intentionally.
 
 ---
 
-## S-09. Keep semantic constants and units visible
+## S-09. Keep semantic constants, units, and protocol meanings visible
 
-Use meaningful names for values whose business meaning matters:
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+Use meaningful names for values whose meaning matters:
 
 - state codes;
 - TTLs;
 - thresholds;
-- capacity limits;
-- time units;
 - retry counts;
-- Redis key structure.
+- time units;
+- capacity limits;
+- key formats.
 
-Do not extract every literal. Local algorithm constants, obvious counters, or low-level buffer sizes do not automatically deserve global constants.
-
----
-
-## S-10. Centralize repeated key/protocol formatting
-
-If a Redis key/message key/cache key format is shared, keep its format in one place and provide a clearly named builder/helper.
-
-Do not define a central helper and then bypass it with manual concatenation elsewhere.
+Do not extract every literal into a global constant.
 
 ---
 
-## S-11. Decouple cache representation from API representation when they have different lifecycles
+## S-10. Shared key/protocol formatting should have one authoritative definition
 
-Serializing a response VO directly into cache may be acceptable for a very local, short-lived cache.
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
-But when cache data has an independent lifecycle, evolving the API response should not silently break cache compatibility.
+If a key/protocol format is shared, keep one authority for the format.
 
-Review whether a dedicated cache representation or explicit compatibility policy is warranted.
+That authority may be:
 
-This is a **SHOULD/review rule**, not a universal ban on caching response-shaped data.
+- a constant;
+- a builder/helper;
+- a protocol type;
+- an existing repository abstraction.
+
+Do not create a new helper merely because two strings look similar.
 
 ---
 
-## S-12. Front-end mutable state should have a clear owner
+## S-11. Front-end mutable state should have a clear owner
+
+**Evidence:** VALIDATED_PRACTICE
 
 Prefer:
 
-- props/emits or another explicit ownership contract;
+- explicit props/emits or equivalent ownership;
 - derived/computed state instead of manually synchronized duplicates;
-- one source for status mapping;
-- one place that interprets transport/business success.
+- a single authoritative status mapping;
+- clear separation between shared transport-envelope interpretation and use-case-specific success/partial-success/processing behavior.
 
-Do not duplicate the same truth in multiple stores/components unless those copies have a real independent lifecycle.
+Do not force all response interpretation into one global request layer when use cases genuinely differ.
 
 ---
 
-## S-13. Front-end/backend shared contracts need one authority, not necessarily one runtime location
+## S-12. Shared front-end/back-end contracts need one authority or one validation path
 
-Do not maintain contradictory copies of status/model definitions.
+**Evidence:** VALIDATED_PRACTICE
 
-Possible solutions include:
+Avoid independently maintained contradictory copies of the same contract.
 
-- generated/shared types;
+Valid approaches include:
+
+- shared/generated types;
 - protocol definitions;
-- a validated local constant for a stable contract;
-- runtime configuration/API for dynamic server-owned data.
+- validated local constants for stable contracts;
+- runtime API/config for dynamic server-owned data.
 
-Do **not** blindly require every stable enum to be fetched from the server at runtime.
+Do not require every stable enum to be fetched at runtime.
 
 ---
 
-## S-14. Tests should prove behavior and boundaries, not merely execute code
+## S-13. Tests should prove observable behavior and important boundaries
 
-Prioritize tests around:
+**Evidence:** VALIDATED_PRACTICE
 
-- null/unknown-state behavior;
+Prioritize tests for:
+
 - error/fallback semantics;
+- unknown/null states;
 - async completion;
 - serialization round trips;
 - time boundaries;
-- idempotency/duplicate handling;
-- important transformations.
+- idempotency/duplicates;
+- important mappings.
 
-Do not create tests whose only purpose is line coverage or getter/setter mirroring.
+Do not write tests only to mirror getters/setters or inflate line coverage.
 
-The reviewed tutorial projects did not provide enough strong test examples, so final test guidance requires external sources.
+For bug fixes, add a regression test when a practical test harness exists and the defect is testable without disproportionate setup.
+
+---
+
+## S-14. Remove superseded implementation code instead of keeping commented-out history
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+Version control already stores history.
+
+Do not turn this into unrelated repository cleanup; apply it to touched/directly related code.
+
+Ad-hoc `main()` methods or debug/test controllers are not automatically wrong, but should trigger a reachability/scope review.
+
+---
+
+## S-15. Use the repository's normal logging/error mechanism in server/business code
+
+**Evidence:** VALIDATED_PRACTICE
+
+In long-running application/server code, prefer the repository's logging and error-propagation mechanism over ad-hoc `printStackTrace()`.
+
+Do not introduce a logging framework solely to replace simple output in a CLI/bootstrap/example context.
+
+---
+
+## S-16. Avoid blind full-object logging and uncontrolled hot-path logging
+
+**Evidence:** VALIDATED_PRACTICE
+
+Review logging that serializes:
+
+- full request/response objects;
+- large prompts/content;
+- every stream chunk;
+- every render/scroll callback;
+- tight-loop events.
+
+Prefer aggregation, sampling, summaries, or lower verbosity when appropriate.
+
+---
+
+## S-17. New Vue projects should default to TypeScript unless there is a reason not to
+
+**Evidence:** VALIDATED_PRACTICE
+
+Vue has first-class TypeScript support and the official project scaffolding defaults toward TypeScript.
+
+For existing JavaScript projects:
+
+- do not force a migration;
+- public API/store/request boundaries should still have usable type information via TS, JSDoc, or declaration files when practical.
+
+---
+
+## S-18. Every `toMap` call should have an explicit duplicate-key policy in the developer's reasoning
+
+**Evidence:** VERIFIED_MECHANISM + VALIDATED_PRACTICE
+
+Ask:
+
+- Are duplicate keys invalid data?
+- Or are they legal and mergeable?
+
+If invalid, letting the collector fail is legitimate.
+
+If legal, define a merge policy whose business meaning is clear.
+
+Do not silently add `(a, b) -> a` just to make the exception disappear.
 
 ---
 
 # 4. REVIEW TRIGGERS — inspect, do not auto-refactor
 
-The values below are deliberately **soft triggers**. They are not pass/fail thresholds.
+All triggers are scope-limited by section 1.3.
 
-## R-01. Long method
+## R-01. Method is unusually long or mixes multiple responsibilities
 
-Trigger review around roughly **40–60 lines of meaningful logic**, or earlier when the method mixes several independent responsibilities.
+**Evidence:** UNCALIBRATED_TRIGGER
 
-Ask:
+Review when a method is difficult to explain as one task, mixes several independent business contexts, or is unusually long relative to neighboring repository code.
 
-- Can the method still be described as one task?
-- Are several business rules mixed together?
-- Would extraction create meaningful names or only more jumping?
+Numbered step comments can be an auxiliary clue, but are not a trigger by themselves.
 
-Do not split a coherent algorithm purely to satisfy a number.
+Do not split a coherent algorithm merely to hit a number.
 
 ---
 
-## R-02. Deep nesting
+## R-02. Control flow is deeply nested or hard to mentally execute
 
-Three or more meaningful nesting levels should trigger a control-flow review.
+**Evidence:** UNCALIBRATED_TRIGGER
 
-Check for:
+Inspect for:
 
 - guard clauses;
-- extraction of a meaningful sub-rule;
-- clearer finite-state handling;
-- removal of duplicated branch work.
+- duplicated branch work;
+- explicit finite-state handling;
+- meaningful sub-rules.
 
-Do not mechanically flatten an algorithm whose nesting reflects the problem.
-
----
-
-## R-03. Numbered step comments
-
-Comments such as:
-
-```text
-// 1.
-// 2.
-// 3.
-```
-
-often indicate that a method has multiple conceptual stages.
-
-Trigger a responsibility review.
-
-Do not automatically extract each numbered step into a separate method.
+Do not flatten nesting when the nesting accurately reflects the problem.
 
 ---
 
-## R-04. Repeated implementation appears a second time
+## R-03. Similar implementation appears a second time
 
-Second occurrence means **review for shared concept**, not “extract automatically.”
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+Second occurrence means **evaluate shared concept**, not “extract automatically.”
 
 Ask:
 
-- Same semantics?
-- Same reason to change?
-- Same failure policy?
-- Same data ownership?
-- Would one abstraction reduce drift?
-
-If not, duplication may be cheaper than a false abstraction.
+- same semantics?
+- same reason to change?
+- same failure policy?
+- same data ownership?
+- would abstraction reduce drift without hiding meaning?
 
 ---
 
-## R-05. Large component/page
+## R-04. Vue component/page is unusually large or mixes multiple feature domains
 
-A Vue component/script approaching a few hundred lines, or mixing three or more independent feature areas, should trigger a boundary review.
+**Evidence:** UNCALIBRATED_TRIGGER
 
-Typical separable areas:
+Review boundaries when one component owns several independent areas such as:
 
 - upload orchestration;
 - SSE/chat lifecycle;
-- table pagination;
-- edit/delete dialogs;
+- pagination;
+- dialogs;
 - state mapping;
-- reusable API lifecycle.
+- request lifecycle.
 
-Do not build a generic configuration-driven mega-component merely to reduce file count.
+Observed size ranges from mature component libraries are calibration data, not universal thresholds.
+
+Do not build a configuration-driven mega-component merely to reduce file count.
 
 ---
 
-## R-06. Giant boolean condition
+## R-05. Giant boolean condition
 
-A condition containing many unrelated checks should trigger review.
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
-Ask whether the condition mixes:
+Inspect whether one condition mixes:
 
 - input-shape validation;
 - business-state validation;
-- range validation;
-- defaulting;
+- range checks;
 - normalization;
+- defaulting;
 - construction.
 
-Prefer exposing semantic groups when that improves reading.
-
-Do not create one class per predicate.
+Expose semantic groups only when that improves reading.
 
 ---
 
-## R-07. Mechanical field-by-field mapping
+## R-06. Mechanical field-by-field mapping
 
-A large Builder/assembler that copies many related fields should trigger a domain-model review.
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+A large assembler/builder should trigger a **mapping review**, not an automatic domain-model redesign.
+
+First inspect:
+
+- missing fields;
+- defaults;
+- units/precision;
+- repeated transformation logic;
+- ownership of the mapping;
+- whether related fields actually share one concept.
+
+Only discuss DTO/value-object/domain restructuring when there is independent evidence that model responsibilities are wrong and the task allows such redesign.
+
+---
+
+## R-07. Abstraction needs many boolean/configuration flags
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+This often means multiple concepts were forced into one helper.
+
+Inspect whether the abstraction reflects shared semantics or only shared syntax.
+
+---
+
+## R-08. Transaction contains remote/file/slow work
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+Review transaction duration and failure semantics around:
+
+- remote calls;
+- file IO;
+- waits;
+- blocking resources;
+- very large loops.
+
+Do not move work out of the transaction blindly; correctness comes first.
+
+---
+
+## R-09. Full-object or high-frequency logging
+
+**Evidence:** VALIDATED_PRACTICE
+
+Review sensitivity, volume, diagnostic value, and cost.
+
+A practical hot-path signal is a log statement that can execute many times during one external request, such as loop bodies, stream/chunk callbacks, scroll/event handlers, or timer ticks.
+
+---
+
+## R-10. Cache representation and API representation share the same model
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
 
 Ask:
 
-- Are these fields truly independent?
-- Do groups of fields express stable concepts such as range/include/exclude?
-- Is the duplication from the mapping layer, or from a flat source/target model?
+- do the cache and API have the same lifecycle?
+- can an API field change invalidate cached data?
+- is compatibility/versioning explicit?
 
-Do not hide a poor model with reflection or a universal mapper.
-
----
-
-## R-08. Many boolean/configuration flags in one abstraction
-
-This often indicates that several concepts have been forced into one helper.
-
-Review whether the abstraction is really shared or only syntactically consolidated.
+Do not automatically introduce `CacheDTO` or another conversion layer.
 
 ---
 
-## R-09. Transaction contains remote/file/slow operations
+## R-11. Service returns a type named `Response`, `Result`, `VO`, or carries serialization/HTTP semantics
 
-Review transaction duration and failure semantics when a transactional method contains:
+**Evidence:** VALIDATED_PRACTICE
 
-- network calls;
-- file IO;
-- large loops;
-- waits;
-- blocking external resources.
+Review the semantics, not the name:
 
-Do not move work out of a transaction blindly; preserve correctness first.
+- Does it encode HTTP status/headers?
+- Is it an application/use-case result?
+- Is pagination part of the use-case contract?
+- Would it remain meaningful over RPC/CLI/message transport?
 
----
-
-## R-10. Full-object logging or high-frequency logging
-
-Trigger review when code logs:
-
-- full request/response JSON;
-- prompts or large content;
-- every stream chunk;
-- every scroll/render event;
-- loop-level info messages.
-
-Check sensitivity, volume, diagnostic value, and whether logging can affect the main path.
+Do not refactor solely because a class name contains `Response`.
 
 ---
 
-# 5. CONVENTION — consistency choices, not universal rules
+## R-12. Lombok `@Builder` interacts with field initializers or inheritance
 
-The following patterns were common in the source projects or are plausible repository conventions. They must **not** be promoted to universal best practice without a project decision.
+**Evidence:** VERIFIED_MECHANISM
+
+Trigger review when:
+
+- a `@Builder` class has field initializers that are expected to become builder defaults;
+- a `@Builder` class extends a superclass whose fields are expected in the builder.
+
+Check `@Builder.Default`, `@SuperBuilder`, Jackson construction path, and inheritance requirements as applicable.
+
+---
+
+## R-13. A custom delimiter/string protocol is introduced
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+Before accepting `a|b|c` / manual `split` style protocols, review:
+
+- escaping;
+- delimiter collisions;
+- missing fields;
+- version compatibility;
+- whether a structured existing format already solves the problem.
+
+Do not force a typed wrapper around simple pass-through identifiers that do not need decoding.
+
+---
+
+## R-14. A debug/test entry point exists in production-reachable code
+
+**Evidence:** MAINTAINABILITY_CANDIDATE
+
+Inspect:
+
+- production reachability;
+- profile/feature protection;
+- authentication;
+- whether it belongs in test tooling or a separate module.
+
+Do not delete it automatically without understanding its role.
+
+---
+
+## R-15. A catch/fallback/degradation branch is added without a corresponding test change
+
+**Evidence:** VALIDATED_PRACTICE
+
+This is a review prompt, not an automatic failure.
+
+Ask whether the new failure path is practically testable and whether existing tests already cover the contract.
+
+---
+
+## R-16. Vue uses array index as `:key`
+
+**Evidence:** VERIFIED_MECHANISM
+
+Index keys can be acceptable for stable, non-reordered lists without child/DOM state dependence.
+
+Review carefully when:
+
+- items can be inserted/deleted/reordered;
+- child component state matters;
+- DOM/form state must stay attached to logical items.
+
+---
+
+# 5. CONVENTION — project consistency choices
 
 ## C-01. Model suffix vocabulary
 
-Examples:
+Examples such as `DO`, `DTO`, `ReqVO`, `RspVO` are repository vocabulary.
 
-- `DO`
-- `DTO`
-- `ReqVO`
-- `RspVO`
+Consistency matters; the exact suffix set is not universal.
 
-The important part is that model roles are understandable and consistent.
-
-Do not create every possible model type before there is an independent contract or reason to change.
+Do not create every possible model type before it has an independent contract.
 
 ---
 
-## C-02. Null-style preference
+## C-02. Null-check syntax
 
-`Objects.isNull(x)` vs `x == null` is mostly a style choice in ordinary Java code.
+`Objects.isNull(x)` vs `x == null` is ordinarily a style choice.
 
-Follow the repository's local convention unless a specific API pattern benefits from one form.
+Follow reasonable repository convention.
 
 ---
 
-## C-03. Error-code numbering/prefix scheme
+## C-03. Error-code format
 
-A stable named error definition is valuable.
+Numeric, string, service-prefixed, or globally partitioned formats are project choices unless an external protocol requires one.
 
-Whether the code is:
-
-- numeric;
-- string;
-- service-prefixed;
-- globally partitioned;
-
-is a project-level convention unless there is an external protocol requirement.
+Stable names and clear semantics matter more than the numbering scheme.
 
 ---
 
 ## C-04. Response envelope shape
 
-A project may use `Response<T>` / `PageResponse<T>`.
+A project may use `Response<T>` / `PageResponse<T>` or no envelope at all.
 
-The existence of a response envelope is a convention/design decision.
-
-What matters to the coding standard is whether the envelope leaks transport concerns into layers where they do not belong and whether success/failure semantics remain clear.
+What matters is semantic clarity and layer coupling, not the mere presence of an envelope.
 
 ---
 
 ## C-05. Lombok/Builder usage
 
-Using `@Data`, `@Builder`, constructors, etc. is not itself a quality signal.
+Lombok use is not itself a quality signal.
 
-Review:
-
-- mutability needs;
-- defaults;
-- inheritance;
-- serialization/deserialization path;
-- whether generated methods create an unintended API.
+Review mutability, defaults, inheritance, equals/hashCode semantics, and serialization path.
 
 ---
 
-## C-06. Log decoration and comment language
+## C-06. Manual vs Lombok-generated constructor injection
 
-Prefixes such as `==>` or a particular language for comments are team style.
+Both are valid implementations of constructor injection.
 
-Comments should add information that the code does not already state, especially:
+Follow repository convention unless the generated API creates a real problem.
 
-- why;
-- assumption;
-- boundary;
-- concurrency reason;
-- failure rationale.
+---
 
-Do not preserve tutorial-style line-by-line narration as a universal standard.
+## C-07. `Stream.toList()` vs `Collectors.toList()`
+
+Choose based on the actual mutability/compatibility contract and repository/JDK version.
+
+Do not treat them as interchangeable when later mutation matters.
+
+---
+
+## C-08. Log decoration and comment language
+
+Prefixes such as `==>`, separator lines, or a particular comment language are team style.
+
+Comments should add information the code does not already state: why, assumptions, boundary decisions, concurrency rationale, failure rationale.
 
 ---
 
 # 6. Explicitly rejected over-generalizations
 
-The following candidate rules were proposed during research but are **not accepted as hard rules** in v0.
-
 ## X-01. “Every method over 50 lines must be split”
 
 Rejected.
 
-Line count is a review trigger, not a mandatory refactor.
+Length can be a review clue, not an automatic refactor rule.
 
 ## X-02. “Duplicate code appearing twice must be extracted”
 
 Rejected.
 
-Second occurrence triggers evaluation. Shared syntax without shared semantics/change reason is not enough.
+Second occurrence triggers semantic comparison, not automatic abstraction.
 
 ## X-03. “Every `Collectors.toMap` must define a merge function”
 
 Rejected.
 
-The code must define the **uniqueness/conflict contract**.
-
-If duplicate keys indicate corrupt or invalid data, failing is valid. A merge function is needed only when duplicate keys are legitimate and the merge policy is meaningful.
+Duplicate-key semantics decide whether fail-fast or merge is correct.
 
 ## X-04. “Catch blocks must never return defaults/empty values”
 
 Rejected.
 
-Explicit, documented fallback/degradation is valid. Silent failure masquerading as normal success is not.
+Explicit fallback/degradation is valid; silent failure-as-success is not.
 
-## X-05. “Anything expressible as Bean Validation must not be checked in Service”
-
-Rejected.
-
-Static input-shape rules often fit declarative validation. Business state, authorization, database-dependent checks, ordering, and use-case rules may belong in service/application logic.
-
-## X-06. “Service must never return any type named Response/PageResponse”
-
-Rejected as a name-based rule.
-
-Inspect the type's semantics and coupling, not just its class name.
-
-## X-07. “Front end must never define backend status constants”
+## X-05. “Anything expressible as Bean Validation must be moved out of Service code”
 
 Rejected.
 
-The real requirement is one authoritative contract and no divergent copies. Shared/generated/local-validated definitions can all be valid.
+Input-shape validation and business-state validation have different responsibilities.
+
+## X-06. “Service must never return a type named Response/PageResponse”
+
+Rejected.
+
+Judge semantics, not the class name.
+
+## X-07. “Front end must never define backend-owned status constants locally”
+
+Rejected.
+
+The requirement is one authority/validation path, not one mandatory storage location.
 
 ## X-08. “Every business exception is warn without stack; every system exception is error with stack”
 
 Rejected.
 
-Log level and stack policy depend on expectedness, frequency, impact, and diagnostic need—not merely exception class.
+Level and stack policy depend on expectedness, frequency, impact, and diagnostic need.
+
+## X-09. “Every index key in Vue is wrong”
+
+Rejected.
+
+Index keys are unsafe in important dynamic/stateful cases, but not universally invalid.
 
 ---
 
-# 7. External validation backlog
+# 7. AI coding review checklist
 
-Before the final Skill is produced, the following SHOULD/technology-specific rules require independent verification using official documentation and multiple mature codebases.
+Apply this checklist to the **current change**, not the whole repository.
 
-1. **Spring dependency injection**
-   - constructor injection defaults;
-   - lifecycle/framework exceptions.
-
-2. **Service/application/transport boundaries**
-   - when response envelopes are appropriate;
-   - pagination/application result types;
-   - exception vs explicit result modeling.
-
-3. **Bean Validation**
-   - `@Valid` / `@Validated` activation;
-   - nested/container validation;
-   - null semantics;
-   - custom validator boundaries.
-
-4. **Lombok/Jackson defaults**
-   - Builder field defaults;
-   - inheritance;
-   - deserialization behavior.
-
-5. **Stream/Collectors**
-   - duplicate-key semantics;
-   - collection mutability;
-   - ordering;
-   - readable use in mapping/aggregation.
-
-6. **MapStruct/manual mapping**
-   - null/default handling;
-   - unmapped-field policy;
-   - semantic conversion visibility.
-
-7. **Promise/SSE lifecycle**
-   - Promise propagation;
-   - `finally`;
-   - AbortController;
-   - fetch-event-source behavior for the relevant version.
-
-8. **Vue/Pinia**
-   - ownership and derived state;
-   - composable boundaries;
-   - stable keys;
-   - lifecycle cleanup;
-   - JS vs TS/JSDoc strategy.
-
-9. **Logging**
-   - structured context;
-   - exception/cause handling;
-   - hot-path logging;
-   - secret redaction.
-
-10. **Testing**
-    - async completion tests;
-    - boundary tests;
-    - isolation and repeatability.
-
----
-
-# 8. AI coding review questions
-
-After generating or modifying code, the agent should ask:
-
-1. Can a reader explain each changed method/component in one sentence?
-2. Did I compress logic merely to reduce lines?
-3. Did I introduce an abstraction just because two blocks look similar?
+1. What files/behavior did the task actually authorize me to change?
+2. Does every nullable dereference have a real non-null guarantee?
+3. Are validation annotations/imports and activation paths real?
 4. Does every failure path have an intentional outcome?
-5. Are null/empty/missing/failure states distinguishable where they need to be?
-6. Does async code return the real completion/failure signal?
-7. Does cleanup release the actual resource/handle?
-8. Is a status/code interpreted in more than one place?
-9. Did I hardcode environment values or duplicate protocol definitions?
-10. Did I leave commented-out code, debug code, secret logs, or noisy logs?
-11. Are important mappings and unit/precision changes visible?
-12. Did I follow repository-local conventions where they are reasonable?
-13. Did any review trigger fire? If yes, did I evaluate it rather than mechanically refactor?
+5. Did I accidentally turn failure into success/empty/null?
+6. Does async code expose the real completion/failure signal?
+7. Does cleanup act on the actual owned resource/handle?
+8. Are states/codes interpreted consistently from one authority?
+9. Did I hardcode deployment/environment data?
+10. Did I directly log secrets or misuse the logging API?
+11. Are large/full-object/hot-path logs actually justified?
+12. Are important mapping changes, units, defaults, and precision visible?
+13. If code looks duplicated, is the **meaning/change reason** also duplicated?
+14. If a service returns a Response/Result/VO, is that transport coupling or a legitimate application result?
+15. If a cache uses an API-shaped model, is compatibility/lifecycle intentional?
+16. If a `toMap` is used, what are the null-value and duplicate-key contracts?
+17. If Lombok Builder is used, do defaults/inheritance/serialization behave as expected?
+18. In Vue, are keys, list identity, derived state, and cleanup correct?
+19. Did a review trigger fire? If yes, did I inspect it **without automatically expanding scope**?
+20. If behavior changed, what relevant test signal did I run or why could I not run it?
 
 ---
 
-# 9. Next step
+# 8. Remaining calibration work before final Skill
 
-This file is the **v0 candidate matrix expressed as rules**.
+The second-stage external validation is complete for the original backlog.
 
-Next:
+What remains is not “search for more best practices.” It is **Agent calibration**:
 
-1. externally validate only the disputed SHOULD/framework rules;
-2. revise this document into a stable v1;
-3. split stable content into:
-   - core standards;
-   - Java/Spring reference;
-   - Vue reference;
-   - anti-patterns;
-   - review checklist;
-4. create the actual `SKILL.md`;
-5. run A/B coding tasks with and without the skill to check whether it improves code without causing over-abstraction.
+1. test these rules on real coding tasks;
+2. measure false-positive refactors from REVIEW TRIGGER rules;
+3. see whether MUST/SHOULD wording causes unnecessary scope expansion;
+4. compare generated code with and without the standards;
+5. adjust trigger sensitivity before freezing `SKILL.md`.
+
+The final Skill should be split into:
+
+- core standards;
+- Java/Spring reference;
+- Vue/JS/TS reference;
+- anti-patterns;
+- review checklist.
+
+Only stable, useful rules should enter the Skill. Research commentary and long evidence trails should stay outside the runtime context.
