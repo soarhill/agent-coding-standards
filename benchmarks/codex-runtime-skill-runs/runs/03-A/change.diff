@@ -1,0 +1,76 @@
+diff --git a/benchmarks/cases/03-error-null-contract/ProfileService.java b/benchmarks/cases/03-error-null-contract/ProfileService.java
+index ba6dedc..dd577d2 100644
+--- a/benchmarks/cases/03-error-null-contract/ProfileService.java
++++ b/benchmarks/cases/03-error-null-contract/ProfileService.java
+@@ -1,12 +1,12 @@
+ public class ProfileService {
+     private final UserRpcService userRpcService;
+ 
+     public ProfileService(UserRpcService userRpcService) {
+         this.userRpcService = userRpcService;
+     }
+ 
+     public String getDisplayName(long userId) {
+         UserDto user = userRpcService.findUser(userId);
+-        return user.nickname();
++        return user == null ? "Anonymous" : user.nickname();
+     }
+ }
+diff --git a/benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java b/benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java
+index 0198be4..3a4b991 100644
+--- a/benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java
++++ b/benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java
+@@ -1,5 +1,9 @@
+ public class UpstreamUserServiceException extends RuntimeException {
+     public UpstreamUserServiceException(String message) {
+         super(message);
+     }
++
++    public UpstreamUserServiceException(String message, Throwable cause) {
++        super(message, cause);
++    }
+ }
+diff --git a/benchmarks/cases/03-error-null-contract/UserRpcService.java b/benchmarks/cases/03-error-null-contract/UserRpcService.java
+index 2b023a2..3455f04 100644
+--- a/benchmarks/cases/03-error-null-contract/UserRpcService.java
++++ b/benchmarks/cases/03-error-null-contract/UserRpcService.java
+@@ -1,23 +1,30 @@
+ public class UserRpcService {
+     private final UserClient userClient;
+ 
+     public UserRpcService(UserClient userClient) {
+         this.userClient = userClient;
+     }
+ 
++    /** Returns null only when the user service successfully reports that the user does not exist. */
+     public UserDto findUser(long id) {
++        UserClientResponse response;
+         try {
+-            UserClientResponse response = userClient.findById(id);
+-            if (response == null || !response.success()) {
+-                return null;
+-            }
+-            if (!response.found()) {
+-                return null;
+-            }
+-            return response.data();
++            response = userClient.findById(id);
+         } catch (RuntimeException e) {
+-            System.err.println("user lookup failed: " + e.getMessage());
++            throw new UpstreamUserServiceException("User lookup failed for user " + id, e);
++        }
++        if (response == null) {
++            throw new UpstreamUserServiceException("User service returned no response for user " + id);
++        }
++        if (!response.success()) {
++            throw new UpstreamUserServiceException("User lookup failed for user " + id + ": " + response.errorMessage());
++        }
++        if (!response.found()) {
+             return null;
+         }
++        if (response.data() == null) {
++            throw new UpstreamUserServiceException("User service reported a found user without data for user " + id);
++        }
++        return response.data();
+     }
+ }

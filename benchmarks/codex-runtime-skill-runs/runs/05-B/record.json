@@ -1,0 +1,52 @@
+{
+  "run_id": "05-B",
+  "case": "05-vue-state",
+  "condition": "treatment",
+  "anonymous_label": "B",
+  "agent_name": "/root/run_05_b",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/05-B",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": "skill/SKILL.md",
+  "reference_loads": [
+    {
+      "order": 1,
+      "path": "skill/references/core.md",
+      "reason": "Status contracts and scope."
+    },
+    {
+      "order": 2,
+      "path": "skill/references/vue-js-ts.md",
+      "reason": "Shared status interpretation and stable identity."
+    },
+    {
+      "order": 3,
+      "path": "skill/references/anti-patterns.md",
+      "reason": "Duplication/mapping consolidation."
+    },
+    {
+      "order": 4,
+      "path": "skill/references/review-checklist.md",
+      "reason": "Final change review."
+    }
+  ],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [
+    "Worker reports case component, core.md and vue-js-ts.md loaded in one parallel batch, before completing nearby-code inspection; paths and reference relevance complied, numbered workflow order did not strictly comply."
+  ],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Patch is byte-identical to 05-A: shared existing status function and file.id key only. Static evidence only; no runtime harness. Worker reports parallel reading of case component/core/Vue reference: relevant-reference selection is consistent with disclosure triggers, but the numbered workflow order was not strictly followed. This procedural deviation is retained, not silently erased or selectively rerun."
+  },
+  "worker_completion_report_transcription": "Changed KnowledgeFiles.vue: shared statusText for both views preserving codes 0–4 and Unknown; stable file.id key. git diff --check case-file exit 0 no output. No harness/TASK verification command. Git status only component.\nSkill reads invocation order: skill/SKILL.md (workflow/disclosure); skill/references/core.md (status contracts/scope); skill/references/vue-js-ts.md (shared status/stable identity); skill/references/anti-patterns.md (duplicate mapping consolidation without extra abstraction); skill/references/review-checklist.md (final review).\nOther reads assigned-case TASK.md and KnowledgeFiles.vue.\nReported protocol deviation: component, core reference and Vue reference read in one parallel batch rather than completing nearby-code read before loading references. All paths authorized. No commit/subagent."
+}

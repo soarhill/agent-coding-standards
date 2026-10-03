@@ -1,0 +1,137 @@
+{
+  "all_workers_completed": true,
+  "worker_count": 12,
+  "judge_context": "fresh, fork_turns=none, inherited configuration",
+  "reveal_written": true,
+  "inputs": [
+    {
+      "path": "rubric.md",
+      "sha256": "d07f25b77481e63d56cfda301a07e0872c1e1454ea5be99a4c249d28b71b54fc"
+    },
+    {
+      "path": "01/A.diff",
+      "sha256": "9bf102e2279c2a7d439377748d66af006c089316942a90f493726314c8ee6cd1"
+    },
+    {
+      "path": "01/A.metadata.json",
+      "sha256": "43ee195c2e50a0f144808fc49268f2513d28bd4a8a607f597939246d5b0c7a6f"
+    },
+    {
+      "path": "01/B.diff",
+      "sha256": "d33652270052dd0587c27faa7859f3298e34a487b78ec27b3566f9ca7551ec5c"
+    },
+    {
+      "path": "01/B.metadata.json",
+      "sha256": "bf2b3c027790157dc1e49187c5a22280e49142c0d862a5a035a65620e314cbe3"
+    },
+    {
+      "path": "01/TASK.md",
+      "sha256": "59ce0e6a66e85e73480da51c3f0b70308998d36c3b84efea9c4e3c6d67e7407d"
+    },
+    {
+      "path": "02/A.diff",
+      "sha256": "6222981c20655f0d5a0f8cfd49241dbc5d4109ca7ba6528215b6e9c9d32e2d45"
+    },
+    {
+      "path": "02/A.metadata.json",
+      "sha256": "82226854fdfbc649de385c2dc68e858556838b794bd90a05995f3658609fef59"
+    },
+    {
+      "path": "02/B.diff",
+      "sha256": "fc5c2526f921bd8ec181cd2ff0610c76aeffff7803a05349eca6adaf650c18ba"
+    },
+    {
+      "path": "02/B.metadata.json",
+      "sha256": "57641a14917d04446fbe807cf1dc6892e106b905735225718949dfba17e7021f"
+    },
+    {
+      "path": "02/TASK.md",
+      "sha256": "60a12299fa71a7fc69fb9c35f2d171ffb4d83032293f144771594722038e7232"
+    },
+    {
+      "path": "03/A.diff",
+      "sha256": "60a796de6aca435b5f3f5d5d5b22f469ff71d62d27793e2c921e5e5916a6dc5c"
+    },
+    {
+      "path": "03/A.metadata.json",
+      "sha256": "d8200224357bd46be2fbd7bc2102bcad6f046ff13e475dad9c5d8ebb88584ed7"
+    },
+    {
+      "path": "03/B.diff",
+      "sha256": "175eaa7f366d86702929e8cc1057e94dd994b75d6d3975d4847eb9d9d964621a"
+    },
+    {
+      "path": "03/B.metadata.json",
+      "sha256": "765663e2292856924adebfa651b2c14641aca8cf2f3ec77fc9cb161524cfe12f"
+    },
+    {
+      "path": "03/TASK.md",
+      "sha256": "e3e688902c91274f77655c0404fcdd40242e12f68625447418739c1963ab421b"
+    },
+    {
+      "path": "04/A.diff",
+      "sha256": "c559d8f00998c231dabd7ab84267c93b493fe080327ea7a55370fcd4ed9c201c"
+    },
+    {
+      "path": "04/A.metadata.json",
+      "sha256": "34fa88eb3ccf42e250b77b13806c5f9677712cf250f3b69d9c7bdab08d52d117"
+    },
+    {
+      "path": "04/B.diff",
+      "sha256": "31254a71e98a19f456df92b925b59dbd8c51a10d5597f2e7db18d4c3c857c944"
+    },
+    {
+      "path": "04/B.metadata.json",
+      "sha256": "d9ad46c3d1f4599684c4b52cfa72aec231c4e06e34d9cd9e8e6b1d14ea1f6ae8"
+    },
+    {
+      "path": "04/TASK.md",
+      "sha256": "9cd440cf5a7ed0c4a3f8f0bc34e3d0847224b0d861504f054d7758473cda8993"
+    },
+    {
+      "path": "05/A.diff",
+      "sha256": "a28288fa5c5172a0be0c039ecec99bf4f93fd53f48f532356a0049794b388fd4"
+    },
+    {
+      "path": "05/A.metadata.json",
+      "sha256": "ce771f8041b83b0e288082a7f0d3bda8cbca003486da046421ed2865eebc4fe1"
+    },
+    {
+      "path": "05/B.diff",
+      "sha256": "a28288fa5c5172a0be0c039ecec99bf4f93fd53f48f532356a0049794b388fd4"
+    },
+    {
+      "path": "05/B.metadata.json",
+      "sha256": "ad0bc88505238cedee05f664ee768bcf03a3eb108dab58044eb3e471398f57b6"
+    },
+    {
+      "path": "05/TASK.md",
+      "sha256": "0943d73799c0d29eb23651e14c7196066167c33a4a519553c15a815bedb839a1"
+    },
+    {
+      "path": "06/A.diff",
+      "sha256": "e90985309f9cbcef18261a6de77ef7ec28870b3d9c33dc93878cfee0aa48dc50"
+    },
+    {
+      "path": "06/A.metadata.json",
+      "sha256": "d595b71cf544849914966d8b242d6357bb5a30f05c435fd29ea01262e16e48af"
+    },
+    {
+      "path": "06/B.diff",
+      "sha256": "193df475cdfa22de9ad632b1e921c03b76b2b776824bc4305e4dfa6bf45adbf9"
+    },
+    {
+      "path": "06/B.metadata.json",
+      "sha256": "7056f3d64fb5160771055443aa8ec836143c4d0513382358f27bfe7f747e7631"
+    },
+    {
+      "path": "06/TASK.md",
+      "sha256": "edc77dc92f100654225ca13e9941b82302515fef1b93b8e97ef5c8d198299308"
+    }
+  ],
+  "judge_completed_cases": 6,
+  "raw_judge_sha256": "2e4b6b690f13aaf5326cffacf1ff15725edc3d8d92f481d95bc35ec7a925bdcb",
+  "raw_scores_sha256": "ab33ef1993788e4385adfc468dc38926fc19d9f075443acfaf171da6a148fc6c",
+  "raw_scores_validated_before_reveal": true,
+  "judge_reported_protocol_deviations": []
+}

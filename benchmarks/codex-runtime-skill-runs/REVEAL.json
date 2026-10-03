@@ -1,0 +1,49 @@
+{
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "published_only_after_judging_all_six_cases": true,
+  "assignment_method": "Coordinator independently randomized A/B condition labels per case with Math.random(); mapping retained in session memory until raw blind outputs were complete and score totals validated.",
+  "cases": [
+    {
+      "case": "01-complex-validation",
+      "labels": {
+        "A": "treatment",
+        "B": "baseline"
+      }
+    },
+    {
+      "case": "02-mechanical-mapping",
+      "labels": {
+        "A": "treatment",
+        "B": "baseline"
+      }
+    },
+    {
+      "case": "03-error-null-contract",
+      "labels": {
+        "A": "baseline",
+        "B": "treatment"
+      }
+    },
+    {
+      "case": "04-promise-sse",
+      "labels": {
+        "A": "baseline",
+        "B": "treatment"
+      }
+    },
+    {
+      "case": "05-vue-state",
+      "labels": {
+        "A": "baseline",
+        "B": "treatment"
+      }
+    },
+    {
+      "case": "06-scope-control",
+      "labels": {
+        "A": "baseline",
+        "B": "treatment"
+      }
+    }
+  ]
+}

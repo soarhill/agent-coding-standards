@@ -1,0 +1,124 @@
+{
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "worker_count": 12,
+  "judge_agent": "/root/blind_judge",
+  "judge_context": "fresh, fork_turns=none",
+  "runs": [
+    {
+      "id": "01-A",
+      "case": "01-complex-validation",
+      "condition": "treatment",
+      "label": "A",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/01-A",
+      "agent_name": "/root/run_01_a",
+      "protocol_deviations": []
+    },
+    {
+      "id": "01-B",
+      "case": "01-complex-validation",
+      "condition": "baseline",
+      "label": "B",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/01-B",
+      "agent_name": "/root/run_01_b",
+      "protocol_deviations": []
+    },
+    {
+      "id": "02-A",
+      "case": "02-mechanical-mapping",
+      "condition": "treatment",
+      "label": "A",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/02-A",
+      "agent_name": "/root/run_02_a",
+      "protocol_deviations": []
+    },
+    {
+      "id": "02-B",
+      "case": "02-mechanical-mapping",
+      "condition": "baseline",
+      "label": "B",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/02-B",
+      "agent_name": "/root/run_02_b",
+      "protocol_deviations": []
+    },
+    {
+      "id": "03-A",
+      "case": "03-error-null-contract",
+      "condition": "baseline",
+      "label": "A",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/03-A",
+      "agent_name": "/root/run_03_a",
+      "protocol_deviations": []
+    },
+    {
+      "id": "03-B",
+      "case": "03-error-null-contract",
+      "condition": "treatment",
+      "label": "B",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/03-B",
+      "agent_name": "/root/run_03_b",
+      "protocol_deviations": []
+    },
+    {
+      "id": "04-A",
+      "case": "04-promise-sse",
+      "condition": "baseline",
+      "label": "A",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/04-A",
+      "agent_name": "/root/run_04_a",
+      "protocol_deviations": []
+    },
+    {
+      "id": "04-B",
+      "case": "04-promise-sse",
+      "condition": "treatment",
+      "label": "B",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/04-B",
+      "agent_name": "/root/run_04_b",
+      "protocol_deviations": []
+    },
+    {
+      "id": "05-A",
+      "case": "05-vue-state",
+      "condition": "baseline",
+      "label": "A",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/05-A",
+      "agent_name": "/root/run_05_a",
+      "protocol_deviations": []
+    },
+    {
+      "id": "05-B",
+      "case": "05-vue-state",
+      "condition": "treatment",
+      "label": "B",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/05-B",
+      "agent_name": "/root/run_05_b",
+      "protocol_deviations": [
+        "Worker reports case component, core.md and vue-js-ts.md loaded in one parallel batch, before completing nearby-code inspection; paths and reference relevance complied, numbered workflow order did not strictly comply."
+      ]
+    },
+    {
+      "id": "06-A",
+      "case": "06-scope-control",
+      "condition": "baseline",
+      "label": "A",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/06-A",
+      "agent_name": "/root/run_06_a",
+      "protocol_deviations": []
+    },
+    {
+      "id": "06-B",
+      "case": "06-scope-control",
+      "condition": "treatment",
+      "label": "B",
+      "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/06-B",
+      "agent_name": "/root/run_06_b",
+      "protocol_deviations": []
+    }
+  ]
+}

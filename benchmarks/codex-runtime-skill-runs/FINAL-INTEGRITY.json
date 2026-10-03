@@ -1,0 +1,15 @@
+{
+  "main_frozen_file_hash_mismatches": 0,
+  "worker_runs": 12,
+  "baseline_runs": 6,
+  "treatment_runs": 6,
+  "independently_verified_passes": 10,
+  "no_harness_runs": 2,
+  "reported_worker_procedural_deviations": 1,
+  "blind_input_files_verified": 31,
+  "raw_judge_preserved": true,
+  "all_json_files_parse": true,
+  "parsed_json_file_count": 44,
+  "expected_commit_path_prefix": "benchmarks/codex-runtime-skill-runs/",
+  "artifact_whitespace_check": "Passed for authored artifacts; immutable .diff and raw verification text excluded because patch context blank lines require a leading space and captured output retains line endings."
+}

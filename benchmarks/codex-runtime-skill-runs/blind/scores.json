@@ -1,0 +1,242 @@
+{
+  "cases": [
+    {
+      "case": "01",
+      "A": {
+        "correctness": 30,
+        "readability": 19,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 99
+      },
+      "B": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 100
+      },
+      "winner": "B",
+      "reason": "Both preserve the original validation and normalization behavior. B narrowly improves readability by separating validation from record construction and naming independent field limits; A remains a good focused refactor.",
+      "findings_A": [
+        "Validation predicates, raw length/count checks, null handling, priority transformation, and limit default/clamp are preserved; no demonstrated regression.",
+        "Semantic validation helpers and a named default improve clarity without new classes or dependencies.",
+        "The entry point still combines validation, inline priority normalization, and record assembly, giving it slightly more cognitive load.",
+        "Required Java compilation/test passed in Coordinator metadata; test implementations and exact boundary coverage were not supplied.",
+        "No unnecessary abstraction or scope creep is demonstrated."
+      ],
+      "findings_B": [
+        "Original failure predicates and all visible normalization semantics are preserved; no demonstrated regression.",
+        "The validate-then-construct structure and field-specific constants make phases and independent limits easy to review.",
+        "Short helpers follow real validation and normalization boundaries rather than introducing a framework.",
+        "Required Java compilation/test passed in Coordinator metadata; exact test coverage remains unavailable.",
+        "No unnecessary abstraction or scope creep is demonstrated."
+      ]
+    },
+    {
+      "case": "02",
+      "A": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 100
+      },
+      "B": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 100
+      },
+      "winner": "tie",
+      "reason": "Both correctly copy excludedLabels, preserve all other mapping/default/ownership behavior, and make the long positional constructor reviewable. Their different comment styles have no material quality difference.",
+      "findings_A": [
+        "excludedLabels now uses the existing defensive-copy and null-to-empty convention; no other mapping expression changes.",
+        "One field-labeled argument per line clarifies the null-query defaults; source getters make the nonnull mapping explicit.",
+        "Public records, impossible-state defaults, existing copy helpers, and dependencies are preserved.",
+        "Required Java compilation/test passed; the packet does not expose individual field or aliasing assertions.",
+        "Constructor comments aid review but are not compiler-checked destination names; no ordering defect, scope creep, or unnecessary abstraction is visible."
+      ],
+      "findings_B": [
+        "excludedLabels now uses the existing copy helper with unchanged null/default and ownership semantics.",
+        "Destination labels consistently annotate each constructor position in both branches.",
+        "Mapping stays explicit without reflection, a generic mapper, dependencies, or model changes.",
+        "Required Java compilation/test passed; exact field and aliasing coverage is not supplied.",
+        "Comments remain review aids rather than named Java arguments; no demonstrated regression, scope creep, or unnecessary abstraction."
+      ]
+    },
+    {
+      "case": "03",
+      "A": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 100
+      },
+      "B": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 100
+      },
+      "winner": "tie",
+      "reason": "Both reserve null for successful not-found, return Anonymous for absence, throw a typed exception for upstream and malformed-response failures, and preserve transport causes. Message-format differences do not materially change contract quality.",
+      "findings_A": [
+        "The profile null guard removes the missing-user NPE without hiding upstream failure.",
+        "Only the client call is caught; null, unsuccessful, and found-without-data replies throw explicit UpstreamUserServiceException values.",
+        "The added existing-exception constructor preserves causes, and messages identify the user ID and failure condition.",
+        "Required Java compilation/test passed; exact response-combination assertions are not included.",
+        "Changes are directly related to the contract; no demonstrated regression, failure swallowing, scope creep, or unnecessary abstraction."
+      ],
+      "findings_B": [
+        "The same absence/failure distinction prevents the NPE and preserves successful not-found behavior.",
+        "Sequential guards classify missing, unsuccessful, and inconsistent responses as typed failures; caught transport exceptions retain their causes.",
+        "A null/blank upstream error message gets a clear fallback; a nonblank upstream message is retained.",
+        "Required Java compilation/test passed; exact edge-case coverage is not established by the packet.",
+        "All edits are focused on the existing boundary and exception; no demonstrated regression, failure swallowing, scope creep, or unnecessary abstraction."
+      ]
+    },
+    {
+      "case": "04",
+      "A": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 100
+      },
+      "B": {
+        "correctness": 28,
+        "readability": 20,
+        "contract": 13,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 96
+      },
+      "winner": "A",
+      "reason": "Both repair awaited completion, promise-rejection handling, and real request cancellation. A also defines an explicit SSE error callback policy. B leaves callback-managed SSE failure propagation dependent on provider promise semantics that the packet does not establish; this is a contract/coverage limitation, not an observed failing test.",
+      "findings_A": [
+        "Awaited fetchEventSource connects promise completion and rejection to outer loading/error state.",
+        "closeSSE aborts the same controller passed to the request; intentional abort is suppressed as an error, and identity-checked cleanup retains a newer controller.",
+        "onerror explicitly throws the supplied error to request fatal propagation at the SSE callback boundary.",
+        "All three named required tests passed; no separate callback-error, overlapping-request, or multi-component test is documented.",
+        "The shared single-controller design only owns the latest concurrent request, and unguarded loading cleanup could clear shared loading during overlap; overlapping requirements are not established and this is not a demonstrated new regression.",
+        "No unnecessary abstraction or scope creep is demonstrated."
+      ],
+      "findings_B": [
+        "Awaited promise completion, rejection handling, actual controller cancellation, abort suppression, and identity-checked cleanup repair all three demonstrated tests.",
+        "No explicit onerror callback is provided; if the provider handles SSE errors through callbacks/retries while keeping its promise pending, outer error state will not be updated at that callback failure.",
+        "The provider implementation is absent, so the callback limitation is conditional and is not a proven failing runtime behavior.",
+        "All three required tests passed; their names do not establish separate SSE callback/retry behavior.",
+        "The same latest-controller-only and shared-loading overlap limitations apply; the packet establishes no overlapping-call requirement or demonstrated new regression.",
+        "Changes remain focused and readable without unnecessary abstraction or dependencies."
+      ]
+    },
+    {
+      "case": "05",
+      "A": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 1,
+        "total": 96
+      },
+      "B": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 1,
+        "total": 96
+      },
+      "winner": "tie",
+      "reason": "The diffs are identical: both views share the existing table status mapping and rows use logical file IDs instead of indexes. Both are focused source-level fixes, with the same absence of runtime/component verification.",
+      "findings_A": [
+        "One statusText function serves both table and dialog, preserving numeric codes and the original table labels/unknown fallback.",
+        "file.id replaces index keys, expressing logical row/input identity; supplied sample IDs are distinct.",
+        "No API, styling, unrelated markup, backend code, dependency, or Composition API structure is changed.",
+        "No verification command/result was provided; successful whitespace/protected-file checks do not verify Vue compilation or reorder interactions.",
+        "External backend label truth and missing/duplicate-ID behavior are not established; no demonstrated regression, scope creep, or unnecessary abstraction."
+      ],
+      "findings_B": [
+        "Identical shared status mapping removes table/dialog disagreement while retaining the existing code values and fallback.",
+        "Identical file-ID row keys replace positional identity and remove the unused loop index.",
+        "Changes are limited to the two requested issues and preserve styling, APIs, dependencies, and Vue 3 Composition API.",
+        "Metadata provides no runtime or compilation verification; hygiene checks alone cannot establish DOM input identity after reordering.",
+        "Missing/duplicate-ID behavior and external status-name truth are not supplied; no demonstrated regression, scope creep, or unnecessary abstraction."
+      ]
+    },
+    {
+      "case": "06",
+      "A": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 100
+      },
+      "B": {
+        "correctness": 30,
+        "readability": 20,
+        "contract": 15,
+        "scope": 15,
+        "abstraction": 10,
+        "repository_fit": 5,
+        "verification": 5,
+        "total": 100
+      },
+      "winner": "tie",
+      "reason": "Both remove the defective duplicate-path status write and document preservation of existing state, retaining initial pending insertion and the missing-order invariant. Wording and blank-line differences are immaterial.",
+      "findings_A": [
+        "Duplicate handling performs no status write, so existing paid/cancelled states cannot be reset by this branch.",
+        "New-order PENDING_PAYMENT insertion and duplicate-without-order failure remain unchanged.",
+        "The comment explains the removed operation rather than commenting out old code; no abstraction is needed.",
+        "Only OrderService.java changes; the intentionally unrelated report service is untouched.",
+        "Required Java compilation/test passed; exact test assertions are not supplied, but write removal directly establishes preservation in this branch.",
+        "No demonstrated regression or scope creep."
+      ],
+      "findings_B": [
+        "The same deletion preserves all existing statuses while keeping new-order insertion and missing-order failure intact.",
+        "The focused comment makes duplicate idempotency understandable without helpers or new architecture.",
+        "Only OrderService.java changes; excluded generated class files are build artifacts rather than unrelated source edits.",
+        "Required Java compilation/test passed; exact status assertions are unknown, with branch preservation also supported by source inspection.",
+        "No demonstrated regression, unnecessary abstraction, or scope creep; the adjacent blank-line deletion has no material effect."
+      ]
+    }
+  ],
+  "blinding_statement": "Only allowed packet evidence was read; no condition mapping or prohibited resources were read"
+}

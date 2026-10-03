@@ -1,0 +1,40 @@
+{
+  "run_id": "06-B",
+  "case": "06-scope-control",
+  "anonymous_label": "B",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "changed_files": [
+    "benchmarks/cases/06-scope-control/OrderService.java"
+  ],
+  "diff_numstat": [
+    "1\t2\tbenchmarks/cases/06-scope-control/OrderService.java"
+  ],
+  "verification": {
+    "command": "javac *.java && java OrderServiceTest",
+    "cwd": "benchmarks/cases/06-scope-control",
+    "status": "passed",
+    "exit_code": 0,
+    "stdout": "PASS\r\n",
+    "stderr": "",
+    "duration_ms": 831
+  },
+  "factual_checks": {
+    "outside_case_changed_files": [],
+    "test_or_task_changed_files": [],
+    "dependency_manifest_changed_files": [],
+    "protected_file_hash_mismatches": [],
+    "whitespace_check_exit_code": 0,
+    "whitespace_check_output": [],
+    "generated_class_files_excluded_from_diff": [
+      "benchmarks/cases/06-scope-control/DuplicateKeyException.class",
+      "benchmarks/cases/06-scope-control/LegacyReportService.class",
+      "benchmarks/cases/06-scope-control/Order.class",
+      "benchmarks/cases/06-scope-control/OrderRepository.class",
+      "benchmarks/cases/06-scope-control/OrderService.class",
+      "benchmarks/cases/06-scope-control/OrderServiceTest$InMemoryRepo.class",
+      "benchmarks/cases/06-scope-control/OrderServiceTest.class",
+      "benchmarks/cases/06-scope-control/OrderStatus.class"
+    ],
+    "additional_source_files": []
+  }
+}

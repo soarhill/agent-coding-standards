@@ -1,0 +1,29 @@
+{
+  "run_id": "05-A",
+  "case": "05-vue-state",
+  "condition": "baseline",
+  "anonymous_label": "A",
+  "agent_name": "/root/run_05_a",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/05-A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": null,
+  "reference_loads": [],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Only KnowledgeFiles.vue. Consolidates existing numeric status semantics in one local function used by table/dialog; stable file.id key. API, styling, unrelated markup unchanged. No runtime harness; static diff evidence only."
+  },
+  "worker_completion_report_transcription": "Changed KnowledgeFiles.vue: both status displays use statusText preserving codes 0–4 and Unknown; rows key file.id. No TASK harness/command; git diff --check case-file exit 0 no output; reviewed scoped diff exit 0. Skill reads none. Other reads TASK.md, KnowledgeFiles.vue. Protocol deviations none; no commit."
+}

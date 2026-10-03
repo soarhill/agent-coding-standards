@@ -1,0 +1,29 @@
+{
+  "run_id": "03-A",
+  "case": "03-error-null-contract",
+  "condition": "baseline",
+  "anonymous_label": "A",
+  "agent_name": "/root/run_03_a",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/03-A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": null,
+  "reference_loads": [],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Three directly related files. Nullable contract fixed in profile and RPC; cause constructor added to existing exception. No new type/layer. Null response, unsuccessful response and found-without-data become distinct failures; confirmed absence alone returns null."
+  },
+  "worker_completion_report_transcription": "Explicit absence returns Anonymous; upstream failures throw UpstreamUserServiceException preserving thrown causes. Changed ProfileService.java, UserRpcService.java, UpstreamUserServiceException.java. Verification cmd /c \"javac *.java && java ProfileServiceTest\" exit 0 PASS; .class removed. Skill reads none. Other reads all three changed files plus assigned-case TASK.md, UserClient.java, UserClientResponse.java, UserDto.java, ProfileServiceTest.java. Protocol deviations none; no commit."
+}

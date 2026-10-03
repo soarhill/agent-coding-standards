@@ -1,0 +1,35 @@
+{
+  "run_id": "03-A",
+  "case": "03-error-null-contract",
+  "anonymous_label": "A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "changed_files": [
+    "benchmarks/cases/03-error-null-contract/ProfileService.java",
+    "benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java",
+    "benchmarks/cases/03-error-null-contract/UserRpcService.java"
+  ],
+  "diff_numstat": [
+    "1\t1\tbenchmarks/cases/03-error-null-contract/ProfileService.java",
+    "4\t0\tbenchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java",
+    "16\t9\tbenchmarks/cases/03-error-null-contract/UserRpcService.java"
+  ],
+  "verification": {
+    "command": "javac *.java && java ProfileServiceTest",
+    "cwd": "benchmarks/cases/03-error-null-contract",
+    "status": "passed",
+    "exit_code": 0,
+    "stdout": "PASS\r\n",
+    "stderr": "",
+    "duration_ms": 829
+  },
+  "factual_checks": {
+    "outside_case_changed_files": [],
+    "test_or_task_changed_files": [],
+    "dependency_manifest_changed_files": [],
+    "protected_file_hash_mismatches": [],
+    "whitespace_check_exit_code": 0,
+    "whitespace_check_output": [],
+    "generated_class_files_excluded_from_diff": [],
+    "additional_source_files": []
+  }
+}

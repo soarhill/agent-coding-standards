@@ -1,0 +1,29 @@
+{
+  "run_id": "04-A",
+  "case": "04-promise-sse",
+  "condition": "baseline",
+  "anonymous_label": "A",
+  "agent_name": "/root/run_04_a",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/04-A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": null,
+  "reference_loads": [],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Only chat-session.js. Awaits transport promise, onerror rethrows, module activeController owns real abort handle. Uses local signal.aborted to suppress expected cancellation. Identity-guarded handle cleanup; no generic async framework. Shared loading state under overlapping calls is not fully guarded, but overlap is outside supplied task/tests."
+  },
+  "worker_completion_report_transcription": "Changed chat-session.js: await SSE completion, propagate stream errors, abort active request on close. Verification node --test chat-session.test.mjs exit 0; 3 passed 0 failed. Skill reads none. Other files read TASK.md, chat-session.test.mjs (changed implementation is implied read but not separately enumerated in Worker report). Protocol deviations none; no commit."
+}

@@ -1,0 +1,185 @@
+{
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "repository_clean": true,
+  "local_date": "2026-10-03",
+  "timezone": "Asia/Shanghai",
+  "ancestor_agents_files": [],
+  "fixed_configuration": {
+    "model": "inherited from coordinator; exact runtime model identifier not exposed by collaboration API",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "tool_mode": "Codex desktop collaboration.spawn_agent, fork_turns=none, no model or reasoning overrides",
+    "workers": 12
+  },
+  "node_version": "v24.21.0",
+  "java_version": "javac 17.0.14; Microsoft OpenJDK 17.0.14+7-LTS",
+  "frozen_files": [
+    {
+      "path": "benchmarks/AUTOPILOT.md",
+      "sha256": "6d71d999d70fd0665bf18ba6cdcd7bc3f62da1f4c11f8cbadff770c10d5ffcd1"
+    },
+    {
+      "path": "benchmarks/cases/01-complex-validation/BusinessException.java",
+      "sha256": "c05febccd4fde54b0f36b37348b6463b11b9b91e416fe61414192b6d24439530"
+    },
+    {
+      "path": "benchmarks/cases/01-complex-validation/RecommendationCriteria.java",
+      "sha256": "ae8be98bf5d9bf2c2ad8aaf21cc50595b9758fbab4289c78c727b3d9e19acea3"
+    },
+    {
+      "path": "benchmarks/cases/01-complex-validation/RecommendationCriteriaNormalizer.java",
+      "sha256": "68623260ca0a6e6f020cfec5dcc44ec8ccfebccbca001237364a2088760d5bec"
+    },
+    {
+      "path": "benchmarks/cases/01-complex-validation/RecommendationCriteriaNormalizerTest.java",
+      "sha256": "3401a16c5199f0ad21f48d284581eb03424070bbade7e1c891439f1895fa7600"
+    },
+    {
+      "path": "benchmarks/cases/01-complex-validation/TASK.md",
+      "sha256": "59ce0e6a66e85e73480da51c3f0b70308998d36c3b84efea9c4e3c6d67e7407d"
+    },
+    {
+      "path": "benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteria.java",
+      "sha256": "70eea6dff92fa480cc2217c8a070496d1fdb6025111be4cc154e1a69f87a0565"
+    },
+    {
+      "path": "benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java",
+      "sha256": "fe349e4f54d224c10d1127c83816be35058aece7547ca1af95033978c3f9e31e"
+    },
+    {
+      "path": "benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssemblerTest.java",
+      "sha256": "f83bf60d2aaa2064415bbded882873b32be6f9a0e8553b14793561d1d59a5678"
+    },
+    {
+      "path": "benchmarks/cases/02-mechanical-mapping/RoomCandidateQuery.java",
+      "sha256": "a3e12c28176373a9f665b1256334f7bff3ee14f35c8a93a826113a9398ee439e"
+    },
+    {
+      "path": "benchmarks/cases/02-mechanical-mapping/TASK.md",
+      "sha256": "60a12299fa71a7fc69fb9c35f2d171ffb4d83032293f144771594722038e7232"
+    },
+    {
+      "path": "benchmarks/cases/03-error-null-contract/ProfileService.java",
+      "sha256": "e5fac8991fafaabc394bc438fe00f5e65c42ce1172f3b39386e3451c6504e9d1"
+    },
+    {
+      "path": "benchmarks/cases/03-error-null-contract/ProfileServiceTest.java",
+      "sha256": "37feea35b45810ab1607fbff5f8124e3356890a6fa550cf1ebe71ddd38f3f83d"
+    },
+    {
+      "path": "benchmarks/cases/03-error-null-contract/TASK.md",
+      "sha256": "e3e688902c91274f77655c0404fcdd40242e12f68625447418739c1963ab421b"
+    },
+    {
+      "path": "benchmarks/cases/03-error-null-contract/UpstreamUserServiceException.java",
+      "sha256": "3e95578160ef3aa1be7ef2883c5f973235904e3e05eb64a8764c60224c1809f3"
+    },
+    {
+      "path": "benchmarks/cases/03-error-null-contract/UserClient.java",
+      "sha256": "f2c1f29b0fbfa566d26b12b7ebab1495cc5e021fb97b76980da3f20c48f56ecd"
+    },
+    {
+      "path": "benchmarks/cases/03-error-null-contract/UserClientResponse.java",
+      "sha256": "696147537167203d10c248084ddfcd9f1712df18614c3a02a7822571227c2297"
+    },
+    {
+      "path": "benchmarks/cases/03-error-null-contract/UserDto.java",
+      "sha256": "c6f4a85278f3fc27361169809f1e4f65401aab03686a55d0f3d40f4f03e3bf9b"
+    },
+    {
+      "path": "benchmarks/cases/03-error-null-contract/UserRpcService.java",
+      "sha256": "63aa63294144cc18d27606244e7ae84d2578db8bcda81ad3370372613c1fbeaa"
+    },
+    {
+      "path": "benchmarks/cases/04-promise-sse/TASK.md",
+      "sha256": "9cd440cf5a7ed0c4a3f8f0bc34e3d0847224b0d861504f054d7758473cda8993"
+    },
+    {
+      "path": "benchmarks/cases/04-promise-sse/chat-session.js",
+      "sha256": "c8c476302cfc814fb99d2dd60026db7986c94d586a6c906e813cd93d7a101b47"
+    },
+    {
+      "path": "benchmarks/cases/04-promise-sse/chat-session.test.mjs",
+      "sha256": "7309697aae533d1c704c99ddba4209111d6e29c66d90154047c1dbfb1891f4ad"
+    },
+    {
+      "path": "benchmarks/cases/04-promise-sse/package.json",
+      "sha256": "f69ed17eea98f49ee075f676bae79df9cb779e54d5887b94d94313d34511170c"
+    },
+    {
+      "path": "benchmarks/cases/05-vue-state/KnowledgeFiles.vue",
+      "sha256": "b21b60a17967a0a2547adbdc686f9a65f4fd208119bab53839ed57b158556495"
+    },
+    {
+      "path": "benchmarks/cases/05-vue-state/TASK.md",
+      "sha256": "0943d73799c0d29eb23651e14c7196066167c33a4a519553c15a815bedb839a1"
+    },
+    {
+      "path": "benchmarks/cases/06-scope-control/DuplicateKeyException.java",
+      "sha256": "6b863766206d96af1c74e80ca1b1acea95e4b499393be1d3c89b50912416ecb6"
+    },
+    {
+      "path": "benchmarks/cases/06-scope-control/LegacyReportService.java",
+      "sha256": "d1d8e5347b6652aea6198660fd17025ef0bc1cac304703d9b18bc4d85fda269e"
+    },
+    {
+      "path": "benchmarks/cases/06-scope-control/Order.java",
+      "sha256": "5aa85d705e813190c2e95c5891a00bb1f5356e111675ca1bd08e629d958edcd8"
+    },
+    {
+      "path": "benchmarks/cases/06-scope-control/OrderRepository.java",
+      "sha256": "d7c52ef3bfe20a5181d41ed32267ff424fd7d81184a2480fe1eaedab98135884"
+    },
+    {
+      "path": "benchmarks/cases/06-scope-control/OrderService.java",
+      "sha256": "54dbb6b8fcb480e7dce886992b2dd1d5fe3b8b70155298eaa0d7675bb1e70689"
+    },
+    {
+      "path": "benchmarks/cases/06-scope-control/OrderServiceTest.java",
+      "sha256": "09aad10f46abc0aa02d670cd589dd50386524b3d917a0ff2ac310dea1a771ea5"
+    },
+    {
+      "path": "benchmarks/cases/06-scope-control/OrderStatus.java",
+      "sha256": "e7ce4d08415f6dbca99af0ee469adf81659a77c77b8a7378a736b7b858f9b473"
+    },
+    {
+      "path": "benchmarks/cases/06-scope-control/TASK.md",
+      "sha256": "edc77dc92f100654225ca13e9941b82302515fef1b93b8e97ef5c8d198299308"
+    },
+    {
+      "path": "benchmarks/rubric.md",
+      "sha256": "d07f25b77481e63d56cfda301a07e0872c1e1454ea5be99a4c249d28b71b54fc"
+    },
+    {
+      "path": "skill/README.md",
+      "sha256": "55ddc42eb9be3c06cdb94a6c22f27531b276d3a9377a5c6c42fe9b3696d6a724"
+    },
+    {
+      "path": "skill/SKILL.md",
+      "sha256": "384e16f3274431a662f2e4aa3ef19ac3f0a39c08f36ff5b3bb4d7ead7db27ced"
+    },
+    {
+      "path": "skill/references/anti-patterns.md",
+      "sha256": "ea3915a077d9c266be90b024d35ef922b49589950949434faafb5badddf3ae0b"
+    },
+    {
+      "path": "skill/references/core.md",
+      "sha256": "b63d6cc086c3fff995cdcefca272f6873b66af30a57bbf0eccca2252ab17e411"
+    },
+    {
+      "path": "skill/references/java-spring.md",
+      "sha256": "f079aeda2ab8e9a39beab19180e033e421a57e6ae7eec8c606c9177fd59a6ce1"
+    },
+    {
+      "path": "skill/references/review-checklist.md",
+      "sha256": "6d57745b234183f2b7091446e82a43777ff3b2efc73a1cc98ce7c23384727b9f"
+    },
+    {
+      "path": "skill/references/vue-js-ts.md",
+      "sha256": "f2ae6121feda8c9d4ab67ce51ec51e32e9381958fb192173e91daaaa9c4071f8"
+    },
+    {
+      "path": "standards/candidate-rules.md",
+      "sha256": "5b03f9e42a209b69f1b12e2202a84884705408b7092e0a9eee3f82e45fb40910"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "run_id": "02-B",
+  "case": "02-mechanical-mapping",
+  "condition": "baseline",
+  "anonymous_label": "B",
+  "agent_name": "/root/run_02_b",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/02-B",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": null,
+  "reference_loads": [],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "One assembler file. Explicit defensive copy for excludedLabels and positional field labels in both branches; no new helper/class/generic mapping. Comments and expanded defaults are authorized mapping review improvements."
+  },
+  "worker_completion_report_transcription": "Changed AvailableRoomCriteriaAssembler.java: defensive copy excludedLabels; labeled every constructor argument; null defaults one field per line. Verification javac *.java && java AvailableRoomCriteriaAssemblerTest: before exit 1 AssertionError: excluded labels; after exit 0 PASS. Generated .class removed; no commits. Skill reads none. Other reads assigned-case TASK.md, AvailableRoomCriteria.java, RoomCandidateQuery.java, AvailableRoomCriteriaAssembler.java, AvailableRoomCriteriaAssemblerTest.java; case-scoped current git diff/status. Protocol deviations none."
+}

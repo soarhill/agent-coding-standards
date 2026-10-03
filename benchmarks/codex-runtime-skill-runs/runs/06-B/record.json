@@ -1,0 +1,45 @@
+{
+  "run_id": "06-B",
+  "case": "06-scope-control",
+  "condition": "treatment",
+  "anonymous_label": "B",
+  "agent_name": "/root/run_06_b",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/06-B",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": "skill/SKILL.md",
+  "reference_loads": [
+    {
+      "order": 1,
+      "path": "skill/references/core.md",
+      "reason": "Required coding contracts."
+    },
+    {
+      "order": 2,
+      "path": "skill/references/java-spring.md",
+      "reason": "Java-specific guidance."
+    },
+    {
+      "order": 3,
+      "path": "skill/references/review-checklist.md",
+      "reason": "Final diff review."
+    }
+  ],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Only OrderService.java. Removes duplicate-path reset to PENDING_PAYMENT and replaces with focused comment; preserves insert and duplicate-but-missing failure. No helpers/types. LegacyReportService.java unchanged. One deleted behavior statement is the entire fix."
+  },
+  "worker_completion_report_transcription": "Changed OrderService.java: duplicate creates preserve existing status; public API/missing-order failure unchanged. Verification javac *.java; if ($LASTEXITCODE -eq 0) { java OrderServiceTest; exit $LASTEXITCODE } else { exit $LASTEXITCODE }, PowerShell equivalent of TASK command, exit 0 PASS. Skill reads in order: skill/SKILL.md (treatment entry); skill/references/core.md (required standards); skill/references/java-spring.md (Java-specific); skill/references/review-checklist.md (final diff).\nOther reads case TASK.md, OrderService.java, OrderRepository.java, Order.java, OrderStatus.java, DuplicateKeyException.java, OrderServiceTest.java; case file listing and scoped current git diff/status. No unrelated/test/dependency/Skill changes. No protocol deviation."
+}

@@ -1,0 +1,50 @@
+{
+  "run_id": "01-A",
+  "case": "01-complex-validation",
+  "condition": "treatment",
+  "anonymous_label": "A",
+  "agent_name": "/root/run_01_a",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/01-A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": "skill/SKILL.md",
+  "reference_loads": [
+    {
+      "order": 1,
+      "path": "skill/references/core.md",
+      "reason": "Required contract and abstraction guidance."
+    },
+    {
+      "order": 2,
+      "path": "skill/references/java-spring.md",
+      "reason": "Java collection semantics."
+    },
+    {
+      "order": 3,
+      "path": "skill/references/anti-patterns.md",
+      "reason": "Refactor boundaries; read in same batch as java-spring.md."
+    },
+    {
+      "order": 4,
+      "path": "skill/references/review-checklist.md",
+      "reason": "Required final diff review."
+    }
+  ],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Single authorized normalizer file. Three semantic validation predicates and one limit helper; no new type/layer. Preserves original order and raw-length validation, null short-circuit and normalization. Readability task authorizes these helpers."
+  },
+  "worker_completion_report_transcription": "Completed refactor without public API/test/dependency changes. Changed RecommendationCriteriaNormalizer.java: grouped validation into named private predicates and extracted result-limit normalization. TASK verification via cmd /c exit 0, PASS; git diff --check exit 0. Generated .class files removed; no commit.\nSkill reads in order:\n1. skill/SKILL.md — authorized Runtime Coding Skill entry.\n2. skill/references/core.md — required contract and abstraction guidance.\n3. skill/references/java-spring.md and skill/references/anti-patterns.md — concurrent batch for Java collection semantics and bounded refactoring.\n4. skill/references/review-checklist.md — required final diff review.\nOther reads: assigned-case TASK.md, RecommendationCriteriaNormalizer.java, RecommendationCriteria.java, BusinessException.java, RecommendationCriteriaNormalizerTest.java. Protocol deviations: none."
+}

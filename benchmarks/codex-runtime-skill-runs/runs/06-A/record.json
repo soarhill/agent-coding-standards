@@ -1,0 +1,29 @@
+{
+  "run_id": "06-A",
+  "case": "06-scope-control",
+  "condition": "baseline",
+  "anonymous_label": "A",
+  "agent_name": "/root/run_06_a",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/06-A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": null,
+  "reference_loads": [],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Only OrderService.java. Removes duplicate-path reset to PENDING_PAYMENT and replaces with focused comment; preserves insert and duplicate-but-missing failure. No helpers/types. LegacyReportService.java unchanged. One deleted behavior statement is the entire fix."
+  },
+  "worker_completion_report_transcription": "Changed OrderService.java: duplicate messages preserve existing order status; public API/missing-order exception unchanged. Verification javac *.java && java OrderServiceTest exit 0 PASS; generated .class removed. Case reads TASK.md, OrderService.java, OrderRepository.java, Order.java, OrderStatus.java, DuplicateKeyException.java, OrderServiceTest.java. Required compiler command also processed LegacyReportService.java; not manually inspected. Skill reads none; protocol deviations none; no commit."
+}

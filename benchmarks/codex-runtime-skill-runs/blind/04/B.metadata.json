@@ -1,0 +1,33 @@
+{
+  "run_id": "04-B",
+  "case": "04-promise-sse",
+  "anonymous_label": "B",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "changed_files": [
+    "benchmarks/cases/04-promise-sse/chat-session.js"
+  ],
+  "diff_numstat": [
+    "11\t5\tbenchmarks/cases/04-promise-sse/chat-session.js"
+  ],
+  "verification": {
+    "command": "node --test chat-session.test.mjs",
+    "cwd": "benchmarks/cases/04-promise-sse",
+    "status": "passed",
+    "exit_code": 0,
+    "stdout": "✔ sendMessage stays loading until the SSE promise completes (1.1659ms)\n✔ sendMessage reports async failure (0.1891ms)\n✔ closeSSE aborts the active request (0.2344ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 122.7483\n",
+    "stderr": "",
+    "duration_ms": 288
+  },
+  "factual_checks": {
+    "outside_case_changed_files": [],
+    "test_or_task_changed_files": [],
+    "dependency_manifest_changed_files": [],
+    "protected_file_hash_mismatches": [],
+    "whitespace_check_exit_code": 0,
+    "whitespace_check_output": [
+      "warning: in the working copy of 'benchmarks/cases/04-promise-sse/chat-session.js', CRLF will be replaced by LF the next time Git touches it"
+    ],
+    "generated_class_files_excluded_from_diff": [],
+    "additional_source_files": []
+  }
+}

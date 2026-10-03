@@ -1,0 +1,86 @@
+diff --git a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+index 583a0cf..19c6dc4 100644
+--- a/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
++++ b/benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java
+@@ -1,47 +1,57 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+ public final class AvailableRoomCriteriaAssembler {
+     private AvailableRoomCriteriaAssembler() {
+     }
+ 
+     public static AvailableRoomCriteria from(RoomCandidateQuery query) {
+         if (query == null) {
+             return new AvailableRoomCriteria(
+-                    null, null,
+-                    null, null, null, null,
+-                    null, null, null, null,
+-                    List.of(), List.of(),
+-                    List.of(), List.of(),
+-                    List.of(), List.of(),
+-                    true);
++                    /* cityId */ null,
++                    /* districtId */ null,
++                    /* minRent */ null,
++                    /* maxRent */ null,
++                    /* excludedMinRent */ null,
++                    /* excludedMaxRent */ null,
++                    /* minArea */ null,
++                    /* maxArea */ null,
++                    /* excludedMinArea */ null,
++                    /* excludedMaxArea */ null,
++                    /* floors */ List.of(),
++                    /* excludedFloors */ List.of(),
++                    /* requiredFacilities */ List.of(),
++                    /* excludedFacilities */ List.of(),
++                    /* requiredLabels */ List.of(),
++                    /* excludedLabels */ List.of(),
++                    /* impossible */ true);
+         }
+ 
+         return new AvailableRoomCriteria(
+-                query.cityId(),
+-                query.districtId(),
+-                query.minRent(),
+-                query.maxRent(),
+-                query.excludedMinRent(),
+-                query.excludedMaxRent(),
+-                query.minArea(),
+-                query.maxArea(),
+-                query.excludedMinArea(),
+-                query.excludedMaxArea(),
+-                copyIntegers(query.floors()),
+-                copyIntegers(query.excludedFloors()),
+-                copyStrings(query.requiredFacilities()),
+-                copyStrings(query.excludedFacilities()),
+-                copyStrings(query.requiredLabels()),
+-                List.of(),
+-                false);
++                /* cityId */ query.cityId(),
++                /* districtId */ query.districtId(),
++                /* minRent */ query.minRent(),
++                /* maxRent */ query.maxRent(),
++                /* excludedMinRent */ query.excludedMinRent(),
++                /* excludedMaxRent */ query.excludedMaxRent(),
++                /* minArea */ query.minArea(),
++                /* maxArea */ query.maxArea(),
++                /* excludedMinArea */ query.excludedMinArea(),
++                /* excludedMaxArea */ query.excludedMaxArea(),
++                /* floors */ copyIntegers(query.floors()),
++                /* excludedFloors */ copyIntegers(query.excludedFloors()),
++                /* requiredFacilities */ copyStrings(query.requiredFacilities()),
++                /* excludedFacilities */ copyStrings(query.excludedFacilities()),
++                /* requiredLabels */ copyStrings(query.requiredLabels()),
++                /* excludedLabels */ copyStrings(query.excludedLabels()),
++                /* impossible */ false);
+     }
+ 
+     private static List<Integer> copyIntegers(List<Integer> values) {
+         return values == null ? List.of() : new ArrayList<>(values);
+     }
+ 
+     private static List<String> copyStrings(List<String> values) {
+         return values == null ? List.of() : new ArrayList<>(values);
+     }
+ }

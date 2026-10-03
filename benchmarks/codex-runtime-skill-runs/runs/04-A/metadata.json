@@ -1,0 +1,31 @@
+{
+  "run_id": "04-A",
+  "case": "04-promise-sse",
+  "anonymous_label": "A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "changed_files": [
+    "benchmarks/cases/04-promise-sse/chat-session.js"
+  ],
+  "diff_numstat": [
+    "14\t5\tbenchmarks/cases/04-promise-sse/chat-session.js"
+  ],
+  "verification": {
+    "command": "node --test chat-session.test.mjs",
+    "cwd": "benchmarks/cases/04-promise-sse",
+    "status": "passed",
+    "exit_code": 0,
+    "stdout": "✔ sendMessage stays loading until the SSE promise completes (1.0725ms)\n✔ sendMessage reports async failure (0.1718ms)\n✔ closeSSE aborts the active request (0.2237ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 105.0331\n",
+    "stderr": "",
+    "duration_ms": 285
+  },
+  "factual_checks": {
+    "outside_case_changed_files": [],
+    "test_or_task_changed_files": [],
+    "dependency_manifest_changed_files": [],
+    "protected_file_hash_mismatches": [],
+    "whitespace_check_exit_code": 0,
+    "whitespace_check_output": [],
+    "generated_class_files_excluded_from_diff": [],
+    "additional_source_files": []
+  }
+}

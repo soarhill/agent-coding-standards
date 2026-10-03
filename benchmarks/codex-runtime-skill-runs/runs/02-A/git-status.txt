@@ -1,0 +1,1 @@
+ M benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java

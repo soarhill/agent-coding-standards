@@ -1,0 +1,50 @@
+{
+  "run_id": "02-A",
+  "case": "02-mechanical-mapping",
+  "condition": "treatment",
+  "anonymous_label": "A",
+  "agent_name": "/root/run_02_a",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/02-A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": "skill/SKILL.md",
+  "reference_loads": [
+    {
+      "order": 1,
+      "path": "skill/references/core.md",
+      "reason": "Required coding/mapping contracts."
+    },
+    {
+      "order": 2,
+      "path": "skill/references/java-spring.md",
+      "reason": "Java collection/mapping guidance."
+    },
+    {
+      "order": 3,
+      "path": "skill/references/anti-patterns.md",
+      "reason": "Mapping cleanup and abstraction boundaries."
+    },
+    {
+      "order": 4,
+      "path": "skill/references/review-checklist.md",
+      "reason": "Final diff review."
+    }
+  ],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Single assembler file. Explicit excludedLabels copy using existing copyStrings; comments label positional null-query defaults. No added helper, generic mapper, reflection, model change or architecture."
+  },
+  "worker_completion_report_transcription": "Changed AvailableRoomCriteriaAssembler.java: defensively copies excludedLabels and labels null-query constructor defaults. Public records/tests unchanged.\nVerification javac *.java && java AvailableRoomCriteriaAssemblerTest: before exit 1 AssertionError: excluded labels; after exit 0 PASS. git diff --check exit 0. Generated .class removed; no commit.\nSkill reads in order: skill/SKILL.md (workflow/disclosure); skill/references/core.md (required coding/mapping contracts); skill/references/java-spring.md (Java collections/mapping); skill/references/anti-patterns.md (mapping cleanup/abstraction boundaries); skill/references/review-checklist.md (final diff review).\nOther reads: assigned-case TASK.md, AvailableRoomCriteriaAssembler.java, AvailableRoomCriteria.java, RoomCandidateQuery.java, AvailableRoomCriteriaAssemblerTest.java. Protocol deviations: none."
+}

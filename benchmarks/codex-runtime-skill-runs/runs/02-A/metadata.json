@@ -1,0 +1,33 @@
+{
+  "run_id": "02-A",
+  "case": "02-mechanical-mapping",
+  "anonymous_label": "A",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "changed_files": [
+    "benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java"
+  ],
+  "diff_numstat": [
+    "19\t9\tbenchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java"
+  ],
+  "verification": {
+    "command": "javac *.java && java AvailableRoomCriteriaAssemblerTest",
+    "cwd": "benchmarks/cases/02-mechanical-mapping",
+    "status": "passed",
+    "exit_code": 0,
+    "stdout": "PASS\r\n",
+    "stderr": "",
+    "duration_ms": 980
+  },
+  "factual_checks": {
+    "outside_case_changed_files": [],
+    "test_or_task_changed_files": [],
+    "dependency_manifest_changed_files": [],
+    "protected_file_hash_mismatches": [],
+    "whitespace_check_exit_code": 0,
+    "whitespace_check_output": [
+      "warning: in the working copy of 'benchmarks/cases/02-mechanical-mapping/AvailableRoomCriteriaAssembler.java', CRLF will be replaced by LF the next time Git touches it"
+    ],
+    "generated_class_files_excluded_from_diff": [],
+    "additional_source_files": []
+  }
+}

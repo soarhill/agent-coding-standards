@@ -1,0 +1,45 @@
+{
+  "run_id": "04-B",
+  "case": "04-promise-sse",
+  "condition": "treatment",
+  "anonymous_label": "B",
+  "agent_name": "/root/run_04_b",
+  "worktree": "D:/Desktop/study/agent-coding-bench-worktrees/codex-20261003-2f100763/04-B",
+  "starting_commit": "2f1007632c29d74bc4e385d9f2d94de3790a2cbc",
+  "fresh_context": true,
+  "configuration": {
+    "model": "inherited from coordinator; exact runtime identifier not exposed",
+    "reasoning": "inherited from coordinator; exact runtime setting not exposed",
+    "fork_turns": "none",
+    "model_override": null,
+    "reasoning_override": null
+  },
+  "skill_entry_loaded": "skill/SKILL.md",
+  "reference_loads": [
+    {
+      "order": 1,
+      "path": "skill/references/core.md",
+      "reason": "Required coding/resource lifecycle contracts."
+    },
+    {
+      "order": 2,
+      "path": "skill/references/vue-js-ts.md",
+      "reason": "JavaScript promises and cancellation."
+    },
+    {
+      "order": 3,
+      "path": "skill/references/review-checklist.md",
+      "reason": "Final diff review."
+    }
+  ],
+  "reference_reporting_source": "Worker completion report; no exhaustive OS/tool-transcript read audit performed",
+  "reported_protocol_deviations": [],
+  "coordinator_review": {
+    "scope_violation": false,
+    "test_modification": false,
+    "dependency_addition": false,
+    "unnecessary_abstraction": false,
+    "notes": "Only chat-session.js. Awaits fetchEventSource promise, stores actual AbortController, suppresses local signal.aborted errors, identity-guards handle release. No new abstraction. Unlike A, no explicit onerror callback: callback/retry-only SSE failures may not reach the outer catch if the supplied transport retries by default; TASK tests verify Promise rejection, not this transport policy. Overlapping loading state remains outside task coverage in both."
+  },
+  "worker_completion_report_transcription": "Changed chat-session.js: awaited SSE completion, retained/aborted active controller, suppressed expected cancellation errors, cleared completed handle. Verification node --test chat-session.test.mjs exit 0, 3 passed 0 failed: loading until completion, async failure, active-request abort.\nSkill reads in order: skill/SKILL.md (entry/progressive workflow); skill/references/core.md (coding contract/resource lifecycle); skill/references/vue-js-ts.md (JavaScript promise/cancellation); skill/references/review-checklist.md (final diff review).\nOther reads assigned-case TASK.md, chat-session.js, chat-session.test.mjs, package.json. Current diff/status only authorized source changed; no commit/protocol deviation."
+}
