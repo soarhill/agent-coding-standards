@@ -1,43 +1,39 @@
-# Skill staging area
+# Runtime Skill
 
-The candidate standard has reached **v1.1** after independent source-code reviews, cross-review, external validation, and one full A/B Agent calibration round.
+The first runtime candidate is now available:
 
-The current source of truth is:
+- `SKILL.md`
 
-- `../standards/candidate-rules.md`
+Detailed references:
 
-The research standard is now stable enough to produce the **first thin runtime Skill candidate**. That Skill should still be benchmarked before being treated as final.
+- `references/core.md`
+- `references/java-spring.md`
+- `references/vue-js-ts.md`
+- `references/anti-patterns.md`
+- `references/review-checklist.md`
 
-## Calibration status
+## Status
 
-The first 6-case GLM-5.3 benchmark is complete. It showed a small aggregate gain, a strong win against one-off mapping overengineering, no observed scope creep, and one async-cancellation wording gap that was fixed in v1.1.
+This runtime Skill is derived from `standards/candidate-rules.md` v1.1.
 
-The next experiment should benchmark the **actual thin Skill**, not keep loading the full research-oriented candidate-rules document.
+Its source material has passed:
 
-## Planned runtime structure
+- independent source-code review;
+- cross-review;
+- official/open-source validation;
+- one 6-case A/B calibration round with GLM-5.3.
 
-```text
-skill/
-├── SKILL.md
-└── references/
-    ├── core.md
-    ├── java-spring.md
-    ├── vue-js-ts.md
-    ├── anti-patterns.md
-    └── review-checklist.md
-```
+It is still a **runtime candidate**, not a frozen final release.
 
-## Expected behavior
+The next step is to rerun the benchmark with:
 
-1. understand the requested change and repository-local conventions;
-2. do not expand scope merely because a rule detects unrelated legacy issues;
-3. apply hard correctness/contract rules to touched code;
-4. use review triggers as inspection prompts, not automatic refactoring commands;
-5. load language/framework-specific references only when relevant;
-6. preserve architecture unless redesign is explicitly requested;
-7. review the final diff for readability, failure semantics, duplication, mapping clarity, state consistency, resource lifecycle, and over-abstraction.
+- baseline: no Skill;
+- treatment: `skill/SKILL.md` with references loaded according to the Skill workflow.
 
-This skill should complement scope-control tools such as `stop-that-shit`:
+The purpose is to verify that progressive disclosure preserves the useful parts of the full standard without making Agent behavior noisier or weaker.
 
-- scope-control skill: **do not do unnecessary work**;
-- this skill: **write the necessary code well**.
+## Design choice
+
+`SKILL.md` is intentionally thin.
+
+The full research/evidence trail stays in `standards/` and `research/`. Runtime context should contain only the rules needed for the current coding task.
