@@ -1,11 +1,14 @@
-# Candidate Coding Rules v1
+# Candidate Coding Rules v1.1
 
 > Status: **externally validated candidate standard, not final Skill**
 >
-> v1 merges:
+> v1.1 merges:
 > - two independent reviews of four tutorial codebases;
 > - the two cross-reviews;
-> - second-stage validation against official documentation and multiple independent mature repositories.
+> - second-stage validation against official documentation and multiple independent mature repositories;
+> - first-round A/B Agent calibration (GLM-5.3, 6 cases × baseline/standards).
+>
+> The benchmark caused only a narrow async-cancellation clarification. Other rules were intentionally left unchanged to avoid overfitting one model and one small suite.
 >
 > **Observed ≠ Recommended. Popular ≠ Correct.**
 >
@@ -147,9 +150,9 @@ How the failure is printed/logged is a separate logging rule, not part of this i
 
 ---
 
-## M-05. Async completion and failure contracts must be truthful
+## M-05. Async completion, failure, and cancellation contracts must be truthful
 
-**Evidence:** VERIFIED_MECHANISM
+**Evidence:** VERIFIED_MECHANISM + FIRST_ROUND_CALIBRATION
 
 If a caller is expected to wait for completion or catch failure, the function must return/await/propagate the **real** asynchronous operation.
 
@@ -160,7 +163,14 @@ Do not:
 - pass the result of an assignment/expression to `.finally(...)` when a callback is required;
 - report completion before the underlying async work is complete.
 
-Library-specific details still follow the actual library contract. For example, abort/retry behavior may differ between native fetch and an SSE helper.
+Treat **cancellation/abort as a distinct lifecycle outcome**:
+
+- decide whether it means expected shutdown, user cancellation, retryable interruption, or failure for this API;
+- follow the actual library/API settlement contract instead of assuming every abort rejects or every abort resolves;
+- do not accidentally surface an expected lifecycle cancellation as a user-visible request failure;
+- keep loading/error/cleanup state consistent with that decision.
+
+Library-specific details still follow the actual library contract. For example, native fetch and an SSE helper may settle abort/retry differently.
 
 ---
 
@@ -988,7 +998,7 @@ Apply this checklist to the **current change**, not the whole repository.
 3. Are validation annotations/imports and activation paths real?
 4. Does every failure path have an intentional outcome?
 5. Did I accidentally turn failure into success/empty/null?
-6. Does async code expose the real completion/failure signal?
+6. Does async code expose the real completion/failure/cancellation signal, and is intentional cancellation classified correctly?
 7. Does cleanup act on the actual owned resource/handle?
 8. Are states/codes interpreted consistently from one authority?
 9. Did I hardcode deployment/environment data?
@@ -1008,15 +1018,19 @@ Apply this checklist to the **current change**, not the whole repository.
 
 # 8. Remaining calibration work before final Skill
 
-The second-stage external validation is complete for the original backlog.
+The original external-validation backlog is complete, and the first GLM-5.3 A/B calibration round is complete.
 
-What remains is not “search for more best practices.” It is **Agent calibration**:
+The first round found:
 
-1. test these rules on real coding tasks;
-2. measure false-positive refactors from REVIEW TRIGGER rules;
-3. see whether MUST/SHOULD wording causes unnecessary scope expansion;
-4. compare generated code with and without the standards;
-5. adjust trigger sensitivity before freezing `SKILL.md`.
+- a strong positive signal against one-off overengineering in mechanical mapping;
+- no observed scope-creep regression;
+- small readability/state-contract wins;
+- one narrow async-cancellation wording gap, now addressed in M-05;
+- no evidence strong enough to turn Optional/null, line thresholds, or abstraction preferences into harder rules.
+
+The next calibration should target the **actual thin runtime Skill**, because loading a compact `SKILL.md + references` may influence Agent behavior differently from loading this full research document.
+
+Then, if practical, replicate the suite on a second participant model before calling the Skill broadly model-agnostic.
 
 The final Skill should be split into:
 
