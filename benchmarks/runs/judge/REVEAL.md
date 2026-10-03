@@ -6,12 +6,15 @@ Judge score files: `R01.md` … `R12.md` and `OVERVIEW.md` in this directory (un
 
 ## Mapping
 
+> Correction after post-run audit: the originally committed reveal table accidentally swapped the run names/cases for R03 and R04. The blind Judge files themselves were correct (`R03.md` is Case 03 and `R04.md` is Case 02), as is `OVERVIEW.md`. The rows below are the corrected reveal.
+
+
 | Blind ID | Run | Case | Condition | Judge total (out of 95)* |
 |---|---|---|---|---|
 | R01 | glm-5.3-01-complex-validation-standards | 01-complex-validation | standards | 93 |
 | R02 | glm-5.3-06-scope-control-standards | 06-scope-control | standards | 91 |
-| R03 | glm-5.3-02-mechanical-mapping-baseline | 02-mechanical-mapping | baseline | 93 |
-| R04 | glm-5.3-03-error-null-contract-baseline | 03-error-null-contract | baseline | 78 |
+| R03 | glm-5.3-03-error-null-contract-baseline | 03-error-null-contract | baseline | 93 |
+| R04 | glm-5.3-02-mechanical-mapping-baseline | 02-mechanical-mapping | baseline | 78 |
 | R05 | glm-5.3-03-error-null-contract-standards | 03-error-null-contract | standards | 91 |
 | R06 | glm-5.3-04-promise-sse-baseline | 04-promise-sse | baseline | 93 |
 | R07 | glm-5.3-05-vue-state-baseline | 05-vue-state | baseline | 90 |
