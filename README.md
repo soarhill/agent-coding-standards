@@ -14,7 +14,7 @@ The project started from a review of four tutorial codebases, followed by indepe
 
 ## Current stage
 
-We are currently in the **candidate-rule consolidation** stage.
+We are currently in the **validated candidate v1 / Agent calibration** stage.
 
 The repository will separate rules into four strengths:
 
@@ -36,7 +36,7 @@ agent-coding-standards/
     └── README.md
 ```
 
-The final skill and language/framework references will be created only after the candidate rules have been reviewed and the disputed rules have been externally validated.
+The original disputed-rule validation is complete. The next step is to calibrate the rules on real Agent coding tasks before freezing the final SKILL.md.
 
 ## Design principles
 
