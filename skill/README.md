@@ -1,23 +1,18 @@
 # Skill staging area
 
-The candidate standard has reached **v1** after two independent source-code reviews, cross-review, and external validation.
+The candidate standard has reached **v1.1** after independent source-code reviews, cross-review, external validation, and one full A/B Agent calibration round.
 
 The current source of truth is:
 
 - `../standards/candidate-rules.md`
 
-The final runtime Skill is still intentionally not frozen.
+The research standard is now stable enough to produce the **first thin runtime Skill candidate**. That Skill should still be benchmarked before being treated as final.
 
-## Why not generate SKILL.md immediately?
+## Calibration status
 
-The remaining risk is no longer lack of research. It is **Agent behavior**:
+The first 6-case GLM-5.3 benchmark is complete. It showed a small aggregate gain, a strong win against one-off mapping overengineering, no observed scope creep, and one async-cancellation wording gap that was fixed in v1.1.
 
-- Will a REVIEW TRIGGER cause unnecessary refactoring?
-- Will MUST rules accidentally expand task scope?
-- Will the standards improve readability without creating abstraction bloat?
-- Which rules need to be loaded for Java/Spring vs Vue/JS/TS?
-
-We should calibrate those questions on real coding tasks first.
+The next experiment should benchmark the **actual thin Skill**, not keep loading the full research-oriented candidate-rules document.
 
 ## Planned runtime structure
 
