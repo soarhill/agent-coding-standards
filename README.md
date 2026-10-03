@@ -1,55 +1,145 @@
 # agent-coding-standards
 
-A research-driven coding standards project for AI coding agents.
+A research-driven engineering coding Skill for AI coding agents.
 
-## Goal
+> Once requirements and the overall technical direction are known, help the coding agent write the necessary code clearly, maintainably, idiomatically, and without unnecessary abstraction.
 
-This repository is not intended to teach an agent how to design an entire system architecture. Its focus is narrower:
+## v0.1.0
 
-> Once the product requirement and overall technical direction are known, help the coding agent produce code that is clear, maintainable, natural, consistent, and appropriately abstracted.
+The first usable runtime release is now frozen at **v0.1.0**.
 
-The project started from a review of four tutorial codebases, followed by independent analysis from two different coding models and cross-review between them. Because the four projects come from the same tutorial lineage, repeated patterns are treated as observations—not automatically as best practices.
+Runtime entry point:
 
-**Observed ≠ Recommended.**
+```text
+skill/SKILL.md
+```
 
-## Current stage
+The Skill uses progressive disclosure:
 
-We are currently in the **validated candidate v1 / Agent calibration** stage.
+```text
+skill/
+├── SKILL.md
+└── references/
+    ├── core.md
+    ├── java-spring.md
+    ├── vue-js-ts.md
+    ├── anti-patterns.md
+    └── review-checklist.md
+```
 
-The repository will separate rules into four strengths:
+`SKILL.md` stays intentionally thin. Detailed language/framework rules are loaded only when relevant.
 
-- **MUST** — correctness or contract invariants; violations are usually clear defects.
-- **SHOULD** — strong defaults that normally improve maintainability, but can have contextual exceptions.
-- **REVIEW TRIGGER** — mechanical signals that tell an agent to stop and inspect the design; they do not automatically require refactoring.
-- **CONVENTION** — team/project consistency choices, not universal best practices.
+## What this Skill is for
 
-## Planned structure
+Use it when an agent is already implementing or reviewing application code and the task direction is known.
+
+It focuses on:
+
+- correctness and truthful contracts;
+- readable control flow and responsibility boundaries;
+- null / absence / failure semantics;
+- async completion, cancellation, and cleanup;
+- explicit, reviewable data mapping;
+- state/code consistency;
+- appropriate abstraction;
+- scope discipline;
+- final diff review and verification.
+
+It is **not** an architecture-design Skill and does not authorize unrelated cleanup, framework migration, dependency churn, or repository-wide refactoring.
+
+## Core idea
+
+**Observed ≠ Recommended. Popular ≠ Correct.**
+
+The project began by reviewing four tutorial-lineage codebases, then used independent model review, cross-review, official documentation, mature open-source evidence, and controlled A/B coding benchmarks.
+
+Rules are separated into:
+
+- **MUST** — correctness / contract / lifecycle invariants;
+- **SHOULD** — strong maintainability defaults;
+- **REVIEW TRIGGER** — inspect carefully, but do not auto-refactor;
+- **CONVENTION** — repository/team consistency choices.
+
+The most important guardrail is simple:
+
+> A coding standard may improve an in-scope change. It does not expand the task scope by itself.
+
+## Validation status
+
+v0.1.0 has gone through:
+
+- independent source-code review;
+- cross-review;
+- official documentation and mature OSS validation;
+- first-round full-standard calibration;
+- Runtime Skill A/B validation with GLM-5.3;
+- Runtime Skill A/B validation with a Codex participant configuration.
+
+Runtime Skill benchmark summary:
+
+| Participant | Baseline | Runtime Skill | Delta | Scope creep | Over-engineering |
+|---|---:|---:|---:|---|---|
+| GLM-5.3 | 588 / 600 | 587 / 600 | −1 | not observed | not observed |
+| Codex participant | 596 / 600 | 591 / 600 | −5 | not observed | not observed |
+
+These results **do not prove a stable score improvement**. The suite is small, each condition has one sample per case, and strong baselines are close to the rubric ceiling.
+
+What the experiments do support more confidently:
+
+- the Runtime Skill did not trigger systematic scope expansion;
+- it did not trigger framework-building or abstraction bloat;
+- progressive disclosure selected relevant references rather than loading everything;
+- the earlier cancellation/abort wording gap was corrected;
+- large mechanical mappings remained explicit rather than being automatically converted into generic machinery.
+
+See:
+
+- `benchmarks/runs/` — first-round full-standard calibration;
+- `benchmarks/runtime-skill-runs/` — GLM-5.3 Runtime Skill A/B;
+- `benchmarks/codex-runtime-skill-runs/` — Codex Runtime Skill A/B.
+
+## Using the Skill
+
+For an agent that supports local Skills, install or expose the `skill/` directory according to that agent's Skill mechanism.
+
+For an agent without a dedicated Skill loader, use `skill/SKILL.md` as the entry instruction and allow it to read the referenced files on demand.
+
+Do **not** replace the Runtime Skill with `standards/candidate-rules.md` during normal use. The latter is the research-oriented source document, not the optimized runtime context.
+
+## Repository structure
 
 ```text
 agent-coding-standards/
 ├── README.md
-├── research/
-│   └── README.md
+├── CHANGELOG.md
+├── RELEASE_NOTES.md
+├── research/                 # source reviews and validation trail
 ├── standards/
-│   └── candidate-rules.md
+│   └── candidate-rules.md   # research-oriented v1.1 source of truth
 ├── benchmarks/
-│   ├── README.md
-│   ├── rubric.md
 │   ├── cases/
-│   │   └── 01...06
-│   └── runs/
+│   ├── rubric.md
+│   ├── runs/
+│   ├── runtime-skill-runs/
+│   └── codex-runtime-skill-runs/
 └── skill/
-    └── README.md
+    ├── SKILL.md
+    └── references/
 ```
 
-The original disputed-rule validation is complete. A six-case A/B benchmark suite is now available under `benchmarks/` to calibrate the rules on real Agent coding tasks before freezing the final `SKILL.md`.
+## Maintenance policy after v0.1.0
 
-## Design principles
+Do not tune the Skill to chase single benchmark points.
 
-1. Prefer lower cognitive load over fewer lines of code.
-2. Expose intent instead of compressing logic.
-3. Abstract shared concepts and shared change reasons—not merely similar syntax.
-4. Preserve explicit contracts for failure, completion, state, data shape, and resource ownership.
-5. Avoid both under-engineering and over-engineering.
-6. Do not let a local style preference masquerade as an industry rule.
-7. When working in an existing repository, respect local conventions unless they create a clear correctness or maintainability problem.
+A future rule change should preferably come from at least one of:
+
+- a real-world failure/regression observed while using the Skill;
+- repeated benchmark behavior across multiple samples;
+- a verified language/framework/library contract;
+- strong independent evidence that the current wording causes systematic harm.
+
+When a real failure is found, preserve it as a benchmark case before changing the rule.
+
+## License
+
+No license has been added yet. Until one is chosen, normal copyright restrictions apply.

@@ -1,99 +1,121 @@
 # Agent Coding Standards Benchmarks
 
-This suite checks whether the standards improve coding-agent output **without causing scope creep or over-engineering**.
+This suite evaluates whether coding guidance improves or preserves engineering quality **without causing scope creep or over-engineering**.
 
-## What we are testing
-
-We are not comparing Z Code vs Codex.
-
-We are comparing the **same model** under two conditions:
-
-- **Baseline** — the model solves the case without reading `standards/candidate-rules.md`.
-- **Standards** — the same model starts from the exact same files, reads `standards/candidate-rules.md`, then solves the same task.
-
-Use a fresh conversation for every run.
-
-## First-round cases
+## Cases
 
 | Case | Main signal |
 |---|---|
 | 01-complex-validation | readability, responsibility, giant conditions |
 | 02-mechanical-mapping | explicit mapping vs false abstraction |
 | 03-error-null-contract | null/failure/absence semantics |
-| 04-promise-sse | async completion and cancellation |
+| 04-promise-sse | async completion, failure, cancellation |
 | 05-vue-state | state meaning, list identity, local duplication |
-| 06-scope-control | bug fix discipline and scope control |
+| 06-scope-control | focused bug fixing and scope discipline |
 
-## Run protocol
+## Completed experiment rounds
 
-For the first round, use **one model only** across all 6 cases.
+### 1. Full candidate-standard calibration
 
-### A. Baseline run
+Location:
 
-1. Reset the case:
-   ```bash
-   git restore benchmarks/cases/<case>
-   ```
-2. Start a **new conversation** with the model.
-3. Tell it:
-   > Work only on this benchmark case. Read TASK.md and the files inside this case. Do not read standards/, benchmarks/rubric.md, other cases, or prior run outputs.
-4. Give it the case directory.
-5. Let it finish the task normally.
-6. Run the case tests when the case provides a test command.
-7. Save the diff:
-   ```bash
-   git diff -- benchmarks/cases/<case> > benchmarks/runs/<model>-<case>-baseline.diff
-   ```
-8. Copy `benchmarks/run-template.md` to a matching `.md` run note and fill in the facts.
+```text
+benchmarks/runs/
+```
 
-### B. Standards run
+Condition pair:
 
-1. Reset the same case again:
-   ```bash
-   git restore benchmarks/cases/<case>
-   ```
-2. Start another **new conversation**.
-3. Tell the model:
-   > Read standards/candidate-rules.md first. Then work only on this benchmark case and TASK.md. Do not read benchmarks/rubric.md, other cases, baseline diffs, or prior run outputs.
-4. Give it the same case directory.
-5. Let it finish.
-6. Run the same tests.
-7. Save the diff:
-   ```bash
-   git diff -- benchmarks/cases/<case> > benchmarks/runs/<model>-<case>-standards.diff
-   ```
-8. Fill in another run note.
+- baseline: no candidate standard;
+- treatment: full `standards/candidate-rules.md`.
 
-## Fairness rules
+This round exposed an async cancellation wording gap and informed candidate rules v1.1.
 
-- Same model and model mode/configuration.
-- Fresh conversation every time.
-- Same starting commit.
-- Same task text.
-- No baseline output shown to the standards run.
-- No rubric shown to either run.
-- Do not manually coach one run more than the other.
-- If the model asks a necessary clarification, answer the same way in both conditions.
-- If a case has tests, do not edit the tests unless TASK.md explicitly allows it.
+### 2. Runtime Skill — GLM-5.3
 
-## What counts as a win
+Location:
 
-A standards run is better only if it improves the code **and** avoids new damage.
+```text
+benchmarks/runtime-skill-runs/
+```
 
-We specifically care about:
+Condition pair:
+
+- baseline: no Skill / standards / research context;
+- treatment: `skill/SKILL.md` with progressive-disclosure references.
+
+Result: 588 vs 587 / 600 (baseline vs treatment). No scope creep or over-engineering observed. Progressive disclosure behaved as intended.
+
+### 3. Runtime Skill — Codex acceptance
+
+Location:
+
+```text
+benchmarks/codex-runtime-skill-runs/
+```
+
+Condition pair is the same Runtime Skill A/B protocol.
+
+Result: 596 vs 591 / 600 (baseline vs treatment). No scope creep or over-engineering observed. One Vue treatment run recorded a procedural reference-read-order deviation. The main score difference came from a conditional SSE `onerror` contract preference in Case 04.
+
+## Experimental interpretation
+
+These six cases are **not** a statistical proof that the Skill helps or harms coding quality.
+
+Important limitations:
+
+- one sample per condition per case;
+- one Judge per round;
+- strong baselines near the rubric ceiling;
+- heterogeneous cases rather than repeated identical trials;
+- cooperative filesystem isolation rather than an OS security sandbox.
+
+Use the results to detect large behavioral regressions and qualitative patterns, not to over-interpret one-point differences.
+
+## Reproduction rules
+
+For a clean A/B run:
+
+- same participant model/configuration across both conditions;
+- fresh participant context for every run;
+- identical starting commit;
+- separate worktree for each run;
+- no access to prior results, rubric, sibling worktrees, hidden transcripts, or the other condition;
+- baseline physically lacks Skill/standards/research material;
+- treatment sees only the frozen Runtime Skill and references;
+- coordinator independently reruns available verification;
+- Judge is launched only after all participant runs complete;
+- Judge sees anonymous diffs, task text, rubric, and factual verification metadata;
+- reveal condition labels only after all scores are final.
+
+`AUTOPILOT.md` records the cooperative isolation model established during local-agent testing.
+
+## What counts as a useful result
+
+A treatment is not better merely because the diff is larger or contains more abstractions.
+
+Evaluate:
 
 - correctness;
-- readability;
-- clear failure/state contracts;
-- reasonable abstraction;
-- minimal authorized scope;
+- readability and cognitive load;
+- contract clarity;
+- scope discipline;
+- abstraction quality;
 - repository fit;
-- no speculative framework-building.
+- verification quality.
 
-A larger diff is not automatically better.
+A simple, explicit solution can and often should beat a framework-shaped one.
 
-## After the first round
+## Future benchmark work
 
-Run all 6 cases with one model first. Then bring the 12 diffs/run notes back for scoring.
+The current six cases are close to saturation for strong coding agents.
 
-Only after the suite itself looks useful should we repeat it with a second model.
+Prefer adding harder cases from real failures, for example:
+
+- transaction + remote-call boundaries;
+- multi-state workflows;
+- cache/DB semantic drift;
+- concurrent resource ownership;
+- retries/idempotency under partial failure;
+- mappings where generic abstraction is genuinely tempting.
+
+For effect-size questions, repeat each condition multiple times before drawing conclusions.

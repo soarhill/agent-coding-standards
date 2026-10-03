@@ -1,10 +1,10 @@
-# Runtime Skill
+# Engineering Coding Standards Runtime Skill — v0.1.0
 
-The first runtime candidate is now available:
+Runtime entry point:
 
 - `SKILL.md`
 
-Detailed references:
+References:
 
 - `references/core.md`
 - `references/java-spring.md`
@@ -14,26 +14,59 @@ Detailed references:
 
 ## Status
 
-This runtime Skill is derived from `standards/candidate-rules.md` v1.1.
+**v0.1.0 is the first frozen runtime release.**
 
-Its source material has passed:
+It is derived from `standards/candidate-rules.md` v1.1, but the runtime package is intentionally smaller and uses progressive disclosure.
 
-- independent source-code review;
-- cross-review;
+The Skill has completed:
+
+- source-code research and cross-review;
 - official/open-source validation;
-- one 6-case A/B calibration round with GLM-5.3.
+- a full-standard calibration round;
+- a Runtime Skill A/B round with GLM-5.3;
+- a Runtime Skill A/B round with a Codex participant configuration.
 
-It is still a **runtime candidate**, not a frozen final release.
+Across the two Runtime Skill rounds, no systematic scope creep or over-engineering was observed.
 
-The next step is to rerun the benchmark with:
+The benchmarks do **not** establish that the Skill will increase scores on every strong model or every task. Both Runtime Skill experiments had near-ceiling baselines and one sample per condition/case.
 
-- baseline: no Skill;
-- treatment: `skill/SKILL.md` with references loaded according to the Skill workflow.
+## Runtime design
 
-The purpose is to verify that progressive disclosure preserves the useful parts of the full standard without making Agent behavior noisier or weaker.
+`SKILL.md` contains only:
 
-## Design choice
+- scope boundaries;
+- working principles;
+- progressive-disclosure routing;
+- rule-strength semantics;
+- the core scope guardrail.
 
-`SKILL.md` is intentionally thin.
+Detailed rules live in references so irrelevant framework guidance does not consume runtime context.
 
-The full research/evidence trail stays in `standards/` and `research/`. Runtime context should contain only the rules needed for the current coding task.
+Expected loading pattern:
+
+- every task → `core.md`;
+- Java/Spring → `java-spring.md`;
+- Vue/JS/TS → `vue-js-ts.md`;
+- refactor/mapping/duplication/cleanup-sensitive tasks → `anti-patterns.md`;
+- final review → `review-checklist.md`.
+
+The Codex acceptance round recorded one procedural read-order deviation in a Vue run, but no cross-domain overloading or forbidden reference leakage.
+
+## What v0.1.0 deliberately does not claim
+
+It does not claim:
+
+- universal best practices for every repository;
+- guaranteed benchmark improvement;
+- architecture correctness;
+- security-audit coverage;
+- that every REVIEW TRIGGER requires a refactor;
+- that one model's preferred code shape is universally superior.
+
+Repository-local conventions still win when they are reasonable and safe.
+
+## After v0.1.0
+
+Treat this version as a stable baseline for real project use.
+
+Do not edit rules merely because a single benchmark candidate loses one or two points. Prefer collecting real-world failure cases, converting them into reproducible tests/benchmarks, and then deciding whether the Skill should change.
