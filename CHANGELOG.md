@@ -2,9 +2,9 @@
 
 All notable project changes are recorded here.
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-10-04
 
-First productized runtime release candidate.
+First productized runtime release.
 
 ### Added
 
@@ -33,11 +33,20 @@ First productized runtime release candidate.
 
 Benchmark rounds did not demonstrate a stable score improvement, but they also did not show systematic scope creep or over-engineering.
 
-The new `dist/` package is a lean derivative of the benchmarked candidate and requires a final smoke test before tagging v0.1.0.
+The final `dist/` package passed a read-only smoke test with:
+
+- no blocking issues;
+- all reference paths present;
+- no dependency on files outside the package;
+- expected progressive-disclosure behavior for Java/Spring and Vue/JS tasks;
+- no runtime research/benchmark/history material.
+
+Non-blocking observations were intentionally not used to reopen the Skill before release.
 
 ### Known limitations
 
 - Current benchmark suite contains six small/medium cases.
 - Each Runtime Skill condition has one sample per case.
 - Frontend Case 05 has no full runtime harness.
+- JS/TS routing is intentionally broad and may be refined later if real Node.js usage exposes ambiguity.
 - No project license has been selected yet.

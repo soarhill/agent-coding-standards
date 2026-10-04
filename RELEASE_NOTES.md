@@ -1,6 +1,6 @@
 # v0.1.0 Release Notes
 
-`agent-coding-standards` v0.1.0 packages the project as a small installable Coding Skill rather than shipping the research workspace as runtime context.
+`agent-coding-standards` v0.1.0 is the first productized installable Coding Skill release.
 
 ## Install this
 
@@ -36,11 +36,25 @@ Research notes, benchmark artifacts, evidence classifications, and long rule cat
 
 ## Evidence
 
-The project has completed source review, cross-review, external validation, full-standard calibration, and two Runtime Skill A/B rounds.
+The project has completed:
 
-Those experiments do not prove that the Skill always raises benchmark scores. They do support that the benchmarked runtime candidate did not systematically cause scope creep or over-engineering.
+1. source review;
+2. independent cross-review;
+3. external documentation / OSS validation;
+4. full-standard calibration;
+5. Runtime Skill A/B validation with GLM-5.3;
+6. Runtime Skill A/B validation with a Codex participant configuration;
+7. final read-only smoke testing of the productized package.
 
-The final `dist/` package is a lean derivative and should pass one final smoke test before the v0.1.0 tag is created.
+The smoke test passed with no blocking issues. The package is self-contained, all references resolve internally, and simulated Java / Vue usage follows the intended progressive-disclosure path.
+
+The benchmark rounds do not prove that the Skill always raises scores. They do support that the benchmarked runtime candidate did not systematically cause scope creep or over-engineering.
+
+## Why no more pre-release edits
+
+The smoke test reported only non-blocking observations. Those are deliberately left for real-world usage rather than triggering another pre-release rewrite.
+
+This keeps v0.1.0 evidence-driven instead of repeatedly tuning wording to hypothetical edge cases.
 
 ## Next phase
 

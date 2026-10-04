@@ -74,7 +74,8 @@ The research path included:
 - official documentation and mature OSS validation;
 - first-round full-standard calibration;
 - Runtime Skill A/B validation with GLM-5.3;
-- Runtime Skill A/B validation with a Codex participant configuration.
+- Runtime Skill A/B validation with a Codex participant configuration;
+- final read-only smoke test of the productized `dist/` package.
 
 The experiments did **not** establish a stable score improvement. Strong baselines were already near the rubric ceiling and each condition had one sample per case.
 
@@ -86,7 +87,7 @@ What they did support:
 - the earlier cancellation/abort wording gap was corrected;
 - large mappings did not automatically turn into generic frameworks.
 
-The productized `dist/` package is a **lean derivative** of the benchmarked runtime candidate. It should receive a final smoke test before the v0.1.0 tag is created.
+The final smoke test passed with no blocking issues: all references resolved inside the package, no external runtime dependency was required, and Java / Vue task simulations selected the intended references.
 
 ## Repository structure
 
