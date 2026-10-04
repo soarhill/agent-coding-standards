@@ -4,69 +4,70 @@ A research-driven engineering coding Skill for AI coding agents.
 
 > Once requirements and the overall technical direction are known, help the coding agent write the necessary code clearly, maintainably, idiomatically, and without unnecessary abstraction.
 
-## v0.1.0
+## Installable Skill package
 
-The first usable runtime release is now frozen at **v0.1.0**.
-
-Runtime entry point:
+The repository contains research, standards, and benchmark evidence. The **actual installable Skill package** is intentionally much smaller:
 
 ```text
-skill/SKILL.md
+dist/
+└── engineering-coding-standards/
+    ├── SKILL.md
+    └── references/
+        ├── core.md
+        ├── java-spring.md
+        ├── vue-js-ts.md
+        └── review.md
 ```
 
-The Skill uses progressive disclosure:
+Use that directory as the runtime Skill.
 
-```text
-skill/
-├── SKILL.md
-└── references/
-    ├── core.md
-    ├── java-spring.md
-    ├── vue-js-ts.md
-    ├── anti-patterns.md
-    └── review-checklist.md
-```
+The rest of this repository is the development/evidence workspace, not part of the runtime package.
 
-`SKILL.md` stays intentionally thin. Detailed language/framework rules are loaded only when relevant.
-
-## What this Skill is for
+## What the Skill is for
 
 Use it when an agent is already implementing or reviewing application code and the task direction is known.
 
-It focuses on:
+It focuses on a small set of behaviors that coding agents commonly get wrong:
 
-- correctness and truthful contracts;
-- readable control flow and responsibility boundaries;
-- null / absence / failure semantics;
-- async completion, cancellation, and cleanup;
-- explicit, reviewable data mapping;
-- state/code consistency;
-- appropriate abstraction;
-- scope discipline;
-- final diff review and verification.
+- expanding scope because nearby code looks bad;
+- over-abstracting simple code;
+- hiding important mapping semantics;
+- conflating failure, absence, state, completion, or cancellation;
+- cleaning up the wrong resource/handle;
+- optimizing for fewer lines instead of lower cognitive load;
+- ignoring reasonable repository-local conventions;
+- finishing without reviewing the real diff or verification signal.
 
-It is **not** an architecture-design Skill and does not authorize unrelated cleanup, framework migration, dependency churn, or repository-wide refactoring.
+It is **not** an architecture-design Skill, a Java/Spring handbook, a Vue handbook, a security audit, or a formatter/linter replacement.
 
-## Core idea
+## Why the repository is larger than the Skill
 
-**Observed ≠ Recommended. Popular ≠ Correct.**
+This project deliberately separates **evidence** from **runtime instruction**.
 
-The project began by reviewing four tutorial-lineage codebases, then used independent model review, cross-review, official documentation, mature open-source evidence, and controlled A/B coding benchmarks.
+```text
+research/       source-code studies and validation trail
+standards/      research-oriented candidate rules
+benchmarks/     A/B cases, runbooks, judge outputs, experiment artifacts
+skill/          benchmarked runtime candidate kept for provenance
+dist/           productized installable Skill
+```
 
-Rules are separated into:
+The older `skill/` directory is preserved because both Runtime Skill benchmark rounds used it. It is historical experiment input, not the preferred install target.
 
-- **MUST** — correctness / contract / lifecycle invariants;
-- **SHOULD** — strong maintainability defaults;
-- **REVIEW TRIGGER** — inspect carefully, but do not auto-refactor;
-- **CONVENTION** — repository/team consistency choices.
+## Runtime design
 
-The most important guardrail is simple:
+The final package uses progressive disclosure:
 
-> A coding standard may improve an in-scope change. It does not expand the task scope by itself.
+1. `SKILL.md` defines scope, workflow, and the core behavioral intent.
+2. `references/core.md` is loaded for coding work.
+3. Only the relevant language reference is loaded.
+4. `references/review.md` is used for the final diff review.
+
+The package intentionally omits long research commentary, benchmark history, generic best-practice encyclopedias, and rules the model usually knows without prompting.
 
 ## Validation status
 
-v0.1.0 has gone through:
+The research path included:
 
 - independent source-code review;
 - cross-review;
@@ -75,36 +76,17 @@ v0.1.0 has gone through:
 - Runtime Skill A/B validation with GLM-5.3;
 - Runtime Skill A/B validation with a Codex participant configuration.
 
-Runtime Skill benchmark summary:
+The experiments did **not** establish a stable score improvement. Strong baselines were already near the rubric ceiling and each condition had one sample per case.
 
-| Participant | Baseline | Runtime Skill | Delta | Scope creep | Over-engineering |
-|---|---:|---:|---:|---|---|
-| GLM-5.3 | 588 / 600 | 587 / 600 | −1 | not observed | not observed |
-| Codex participant | 596 / 600 | 591 / 600 | −5 | not observed | not observed |
+What they did support:
 
-These results **do not prove a stable score improvement**. The suite is small, each condition has one sample per case, and strong baselines are close to the rubric ceiling.
-
-What the experiments do support more confidently:
-
-- the Runtime Skill did not trigger systematic scope expansion;
-- it did not trigger framework-building or abstraction bloat;
-- progressive disclosure selected relevant references rather than loading everything;
+- no systematic scope creep was observed;
+- no systematic over-engineering was observed;
+- progressive disclosure selected relevant references;
 - the earlier cancellation/abort wording gap was corrected;
-- large mechanical mappings remained explicit rather than being automatically converted into generic machinery.
+- large mappings did not automatically turn into generic frameworks.
 
-See:
-
-- `benchmarks/runs/` — first-round full-standard calibration;
-- `benchmarks/runtime-skill-runs/` — GLM-5.3 Runtime Skill A/B;
-- `benchmarks/codex-runtime-skill-runs/` — Codex Runtime Skill A/B.
-
-## Using the Skill
-
-For an agent that supports local Skills, install or expose the `skill/` directory according to that agent's Skill mechanism.
-
-For an agent without a dedicated Skill loader, use `skill/SKILL.md` as the entry instruction and allow it to read the referenced files on demand.
-
-Do **not** replace the Runtime Skill with `standards/candidate-rules.md` during normal use. The latter is the research-oriented source document, not the optimized runtime context.
+The productized `dist/` package is a **lean derivative** of the benchmarked runtime candidate. It should receive a final smoke test before the v0.1.0 tag is created.
 
 ## Repository structure
 
@@ -113,32 +95,26 @@ agent-coding-standards/
 ├── README.md
 ├── CHANGELOG.md
 ├── RELEASE_NOTES.md
-├── research/                 # source reviews and validation trail
+├── research/
 ├── standards/
-│   └── candidate-rules.md   # research-oriented v1.1 source of truth
 ├── benchmarks/
-│   ├── cases/
-│   ├── rubric.md
-│   ├── runs/
-│   ├── runtime-skill-runs/
-│   └── codex-runtime-skill-runs/
-└── skill/
-    ├── SKILL.md
-    └── references/
+├── skill/                    # benchmark provenance
+└── dist/
+    └── engineering-coding-standards/
 ```
 
-## Maintenance policy after v0.1.0
+## Maintenance policy
 
-Do not tune the Skill to chase single benchmark points.
+Do not tune the Skill to chase isolated benchmark points.
 
-A future rule change should preferably come from at least one of:
+Prefer rule changes backed by:
 
-- a real-world failure/regression observed while using the Skill;
-- repeated benchmark behavior across multiple samples;
+- a concrete real-world failure;
+- repeated benchmark behavior;
 - a verified language/framework/library contract;
-- strong independent evidence that the current wording causes systematic harm.
+- strong evidence of systematic harm.
 
-When a real failure is found, preserve it as a benchmark case before changing the rule.
+When a real failure is found, preserve it as a reproducible case before changing the Skill.
 
 ## License
 

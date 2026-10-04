@@ -1,0 +1,50 @@
+# Java / Spring
+
+Load this only for relevant Java/Spring work.
+
+## Validation
+
+- Confirm validation annotations come from the intended packages.
+- Confirm the real execution path actually activates validation.
+- Distinguish request/parameter validation from business-state validation.
+- Container validation and element validation are separate concerns.
+
+Do not move business rules into Bean Validation merely because an annotation can express part of the condition.
+
+## Exceptions and logging
+
+- Preserve the original cause when translating unexpected exceptions.
+- Preserve interruption semantics where required.
+- In server/business code, use the repository's normal logging/error mechanism.
+- With SLF4J-style logging, keep the throwable in the form that preserves stack/cause information.
+
+Do not add catch/log/rethrow layers without a real ownership or translation reason.
+
+## Collections and mapping
+
+For `Collectors.toMap`:
+
+- mapped values must not be null;
+- duplicate-key behavior must be intentional;
+- fail-fast is valid when duplicates are invalid;
+- use a meaningful merge policy only when duplicates are legitimate.
+
+For field mapping:
+
+- keep renamed fields, defaults, units, missing-value policy, and transformations visible;
+- use existing MapStruct/Builder patterns when they genuinely fit;
+- do not invent a mapper framework, reflection layer, or large one-off builder merely to avoid explicit assignments.
+
+Large mechanical mapping is a review trigger, not a domain-redesign command.
+
+## Streams
+
+Use Stream for short, pure, obvious transformations.
+
+Prefer a direct loop when branching, side effects, early exit, IO, or mutable assembly makes the loop easier to understand.
+
+## Spring-specific review trigger
+
+If a transaction encloses remote calls, file IO, waits, or other slow/blocking work, review duration and failure semantics.
+
+Do not move work out of the transaction automatically; correctness comes first.

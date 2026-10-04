@@ -1,74 +1,55 @@
 # v0.1.0 Release Notes
 
-`agent-coding-standards` v0.1.0 is the first frozen Runtime Skill release.
+`agent-coding-standards` v0.1.0 packages the project as a small installable Coding Skill rather than shipping the research workspace as runtime context.
 
-## Why this exists
-
-AI coding agents are often functionally correct but still produce code that is:
-
-- harder to review than necessary;
-- over-abstracted;
-- inconsistent about null/failure/state semantics;
-- careless about async/resource lifecycle;
-- tempted to clean unrelated legacy code.
-
-This Skill focuses on the implementation layer after requirements and overall technical direction are known.
-
-## Runtime package
-
-Use:
+## Install this
 
 ```text
-skill/SKILL.md
+dist/engineering-coding-standards/
 ```
 
-with its on-demand references under:
+The package contains only:
 
 ```text
-skill/references/
+SKILL.md
+references/core.md
+references/java-spring.md
+references/vue-js-ts.md
+references/review.md
 ```
 
-The full `standards/candidate-rules.md` remains research material and should not normally be loaded into runtime coding context.
+## What changed during productization
 
-## Design principles
+The benchmarked candidate under `skill/` was useful but still carried some handbook-like and duplicated guidance.
 
-- lower cognitive load over fewer lines;
-- explicit contracts over clever compression;
-- abstract shared meaning, not repeated syntax;
-- review triggers do not authorize refactors;
-- repository conventions matter;
-- correctness and lifecycle semantics are stronger than style preferences;
-- the Skill must not expand task scope on its own.
+The release package keeps only the behavior-shaping rules most likely to matter during coding:
 
-## Evidence behind v0.1.0
+- stay inside the authorized scope;
+- keep failure/state/async/cleanup contracts truthful;
+- keep important mapping semantics visible;
+- prefer lower cognitive load over fewer lines;
+- abstract shared meaning rather than repeated syntax;
+- respect reasonable repository conventions;
+- review the real diff and real verification signal before finishing.
 
-The release combines:
+Research notes, benchmark artifacts, evidence classifications, and long rule catalogs remain in the repository but do not ship as runtime Skill context.
 
-1. review of four source projects;
-2. independent model analysis and cross-review;
-3. official documentation and mature open-source validation;
-4. full-standard A/B calibration;
-5. Runtime Skill A/B validation with GLM-5.3;
-6. Runtime Skill A/B acceptance with a Codex participant configuration.
+## Evidence
 
-The Runtime Skill did not show a stable benchmark-score improvement on these near-ceiling cases. More importantly for a constraint Skill, neither validation round showed systematic scope creep or over-engineering.
+The project has completed source review, cross-review, external validation, full-standard calibration, and two Runtime Skill A/B rounds.
 
-## What is intentionally frozen
+Those experiments do not prove that the Skill always raises benchmark scores. They do support that the benchmarked runtime candidate did not systematically cause scope creep or over-engineering.
 
-v0.1.0 does **not** add a new rule in response to the Codex Case 04 score difference.
-
-That difference depends on a specific SSE provider callback/retry contract that was not fully present in the benchmark evidence. Changing the Skill to chase that single result would be benchmark overfitting.
+The final `dist/` package is a lean derivative and should pass one final smoke test before the v0.1.0 tag is created.
 
 ## Next phase
 
-Use v0.1.0 on real projects.
+Use the Skill on real projects.
 
-When the Skill causes a concrete bad change:
+When a concrete bad behavior appears:
 
 1. capture the failure;
 2. reduce it to a reproducible case;
-3. add the case to the benchmark;
-4. reproduce across repeated runs where practical;
-5. only then consider changing the rule.
-
-That makes future versions evidence-driven rather than preference-driven.
+3. add it to the benchmark;
+4. reproduce where practical;
+5. only then decide whether the Skill should change.
