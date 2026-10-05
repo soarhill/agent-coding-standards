@@ -1,6 +1,6 @@
 ---
 name: engineering-coding-standards
-description: Use when writing, modifying, or reviewing application code after requirements and overall technical direction are known. Helps keep changes scoped, contracts truthful, code readable, and abstractions proportional.
+description: Use when writing, modifying, or reviewing application code after requirements and overall technical direction are known. Helps keep changes scoped, contracts truthful, code readable, names meaningful, and abstractions proportional.
 ---
 
 # Engineering Coding Standards
@@ -27,11 +27,12 @@ Do not load every reference by default.
 
 - Prefer clear contracts over clever compression.
 - Prefer lower cognitive load over fewer lines.
+- Make names and local organization reveal responsibility.
 - Preserve the repository's reasonable local conventions.
 - Keep failure, absence, state, async completion, cancellation, and cleanup semantics intentional.
 - Keep important mappings visible enough to review.
 - Abstract shared meaning and shared reasons to change, not merely repeated syntax.
-- Treat long methods, duplication, nesting, large mappings, and large components as **review signals**, not automatic refactor commands.
+- Treat long methods, duplication, nesting, large mappings, large components, and new package/module boundaries as **review signals**, not automatic refactor commands.
 - Never expand task scope merely because this Skill notices unrelated problems.
 
 ## Scope guardrail

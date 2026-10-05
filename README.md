@@ -31,6 +31,7 @@ It focuses on a small set of behaviors that coding agents commonly get wrong:
 
 - expanding scope because nearby code looks bad;
 - over-abstracting simple code;
+- choosing vague or inconsistent names and inventing competing package/module organization;
 - keeping semantically dead flags/branches or unreadable boolean call sites;
 - hiding side effects in helpers or choosing data structures that obscure intent;
 - letting one method accumulate several independent phases and mutable states;
@@ -80,7 +81,8 @@ The research path included:
 - Runtime Skill A/B validation with GLM-5.3;
 - Runtime Skill A/B validation with a Codex participant configuration;
 - final read-only smoke test of the productized `dist/` package;
-- real-project calibration after reviewing code generated with the Skill.
+- real-project calibration after reviewing code generated with the Skill;
+- targeted naming/package/module validation against Alibaba P3C, Google Java Style, Oracle, Maven, Gradle, Vue, and npm guidance.
 
 The experiments did **not** establish a stable score improvement. Strong baselines were already near the rubric ceiling and each condition had one sample per case.
 
@@ -92,7 +94,7 @@ What they did support:
 - the earlier cancellation/abort wording gap was corrected;
 - large mappings did not automatically turn into generic frameworks.
 
-Real-project calibration exposed a different class of quality problem: code could remain correct and in-scope while still carrying avoidable cognitive noise such as no-op mode flags, opaque boolean call sites, hidden mutation of reused parameter objects, data structures that did not match intent, and methods with too many simultaneous semantic phases. The productized Skill now reviews these explicitly without imposing line-count thresholds or architecture rewrites.
+Real-project calibration exposed a different class of quality problem: code could remain correct and in-scope while still carrying avoidable cognitive noise such as no-op mode flags, opaque boolean call sites, hidden mutation of reused parameter objects, data structures that did not match intent, methods with too many simultaneous semantic phases, and names/organization that were too weakly constrained. The productized Skill now reviews these explicitly without imposing line-count thresholds or architecture rewrites.
 
 ## Repository structure
 

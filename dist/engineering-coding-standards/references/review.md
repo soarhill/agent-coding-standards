@@ -20,6 +20,14 @@ Review the **actual change**, not the whole repository.
 - Is any non-obvious business rule, invariant, workaround, boundary, concurrency, or lifecycle decision missing the explanation a future maintainer would need?
 - Did I add comments that merely repeat the code, compensate for weak naming, or leave comments that are now stale?
 
+## Naming and organization
+
+- Do new package/module/file/class/method names reveal their responsibility without needing a comment to decode them?
+- Did I use vague catch-all names or uncommon abbreviations where a precise full name would be clearer?
+- Does new code follow the repository's existing naming and organizational pattern instead of introducing a competing one?
+- If I created a package, directory, or module boundary, does it group a coherent responsibility rather than merely make the tree look tidy?
+- For build modules, do logical names and physical locations agree closely enough that navigation is unsurprising?
+
 ## Cognitive load
 
 - Does any parameter, flag, branch, or helper imply a distinction that currently has no behavioral effect?

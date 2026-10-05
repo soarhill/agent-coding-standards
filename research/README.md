@@ -18,6 +18,10 @@ Two different coding models independently produced research reports:
 
 They were then cross-reviewed.
 
+Later targeted validation notes are kept here when a real-project output exposes a gap that needs external evidence. See:
+
+- `naming-and-organization-validation.md` — Alibaba P3C, Google Java Style, Oracle, Maven, Gradle, Vue, and npm guidance used to calibrate naming/package/module rules.
+
 ## Evidence policy
 
 The four projects share the same tutorial lineage. Therefore:
@@ -51,12 +55,6 @@ These corrections are a reminder that **no single model report is itself a stand
 The raw reports and cross-review text are research artifacts. The actionable synthesis lives in:
 
 - `../standards/candidate-rules.md`
+- the productized runtime package under `../dist/engineering-coding-standards/`
 
-That file deliberately distinguishes:
-
-- **MUST**
-- **SHOULD**
-- **REVIEW TRIGGER**
-- **CONVENTION**
-
-Disputed framework/language rules remain marked for external validation before they become part of the final agent skill.
+Rules are kept narrow and are promoted only when supported by concrete failures, repeated evidence, or verified language/framework/tooling guidance.

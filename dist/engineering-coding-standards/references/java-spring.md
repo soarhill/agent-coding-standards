@@ -2,6 +2,28 @@
 
 Load this only for relevant Java/Spring work.
 
+## Naming, packages, and build modules
+
+For newly introduced Java code, follow the repository first. When no stronger local convention exists:
+
+- package segments are lowercase; avoid camelCase and underscore-based package naming;
+- keep the existing root package rather than inventing another namespace;
+- class and interface names use UpperCamelCase and describe a noun, role, or capability;
+- method and variable names use lowerCamelCase and express behavior or meaning;
+- constants use clear `UPPER_SNAKE_CASE` names;
+- avoid uncommon abbreviations that save a few characters but hide meaning.
+
+Do not blindly import organization-specific rules such as mandatory `Impl` suffixes or singular package names into a repository that follows another coherent convention.
+
+For Maven/Gradle modules and published Java artifacts:
+
+- follow the naming pattern already established by sibling modules;
+- keep logical module/project names aligned with their physical directories when practical;
+- for Maven artifact IDs, prefer lowercase letters, digits, and hyphens;
+- use names that describe the product/component responsibility rather than temporary implementation detail;
+- avoid unnecessarily deep or redundant module paths;
+- do not create a new build module merely to reorganize a few files; module creation is a larger boundary/build decision.
+
 ## Validation
 
 - Confirm validation annotations come from the intended packages.

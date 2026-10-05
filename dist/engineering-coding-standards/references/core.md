@@ -67,6 +67,21 @@ When extraction genuinely helps, split around meaningful phases such as:
 
 Keep orchestration readable and keep each extracted step meaningful. Do not fragment a coherent algorithm into tiny pass-through helpers merely to shorten a method.
 
+## Naming and local organization
+
+Names should reveal the domain concept, responsibility, or behavior they represent.
+
+- Prefer clear, specific names over vague catch-all labels such as `misc`, `common2`, `helper`, `manager`, or `utils` when a more precise concept exists.
+- Prefer full words over uncommon abbreviations. Keep standard domain/protocol abbreviations when they are already conventional and unambiguous.
+- Name behavior by intent, not by incidental implementation detail.
+- Follow the repository's established naming, package/directory, and module conventions when they are reasonable.
+- Before creating a new package, directory, module, or organizational layer, inspect nearby structure and match its granularity.
+- Do not introduce a second competing organization style inside one codebase merely because another style is personally preferable.
+- Do not create a new package/module boundary only to make the tree look tidy. A new boundary should group a coherent responsibility or build unit already justified by the task.
+- If a name needs a comment to explain what the thing is, first consider whether the name itself can be clearer.
+
+Do not rename unrelated existing packages, modules, files, classes, or public APIs just to normalize style.
+
 ## Comment discipline
 
 Prefer code that explains **what it does** through naming and structure. Use comments for information the code cannot express clearly on its own.
