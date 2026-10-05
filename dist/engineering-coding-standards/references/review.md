@@ -20,6 +20,15 @@ Review the **actual change**, not the whole repository.
 - Is any non-obvious business rule, invariant, workaround, boundary, concurrency, or lifecycle decision missing the explanation a future maintainer would need?
 - Did I add comments that merely repeat the code, compensate for weak naming, or leave comments that are now stale?
 
+## Cognitive load
+
+- Does any parameter, flag, branch, or helper imply a distinction that currently has no behavioral effect?
+- Are raw boolean arguments forcing the reader to jump to the callee to understand what `true` or `false` means?
+- Does a data structure express its actual semantics, or am I using a map when I only need membership?
+- Did a helper unexpectedly mutate an object the caller later reuses?
+- Does one method make the reader track several independent phases or mutable accumulators at once?
+- If so, is there a small semantic extraction that lowers cognitive load without creating a new framework?
+
 ## Anti-overengineering
 
 Before keeping a new abstraction, ask whether it exists because of real shared meaning or only repeated syntax.

@@ -31,6 +31,9 @@ It focuses on a small set of behaviors that coding agents commonly get wrong:
 
 - expanding scope because nearby code looks bad;
 - over-abstracting simple code;
+- keeping semantically dead flags/branches or unreadable boolean call sites;
+- hiding side effects in helpers or choosing data structures that obscure intent;
+- letting one method accumulate several independent phases and mutable states;
 - hiding important mapping semantics;
 - conflating failure, absence, state, completion, or cancellation;
 - cleaning up the wrong resource/handle;
@@ -76,7 +79,8 @@ The research path included:
 - first-round full-standard calibration;
 - Runtime Skill A/B validation with GLM-5.3;
 - Runtime Skill A/B validation with a Codex participant configuration;
-- final read-only smoke test of the productized `dist/` package.
+- final read-only smoke test of the productized `dist/` package;
+- real-project calibration after reviewing code generated with the Skill.
 
 The experiments did **not** establish a stable score improvement. Strong baselines were already near the rubric ceiling and each condition had one sample per case.
 
@@ -88,7 +92,7 @@ What they did support:
 - the earlier cancellation/abort wording gap was corrected;
 - large mappings did not automatically turn into generic frameworks.
 
-The final smoke test passed with no blocking issues: all references resolved inside the package, no external runtime dependency was required, and Java / Vue task simulations selected the intended references.
+Real-project calibration exposed a different class of quality problem: code could remain correct and in-scope while still carrying avoidable cognitive noise such as no-op mode flags, opaque boolean call sites, hidden mutation of reused parameter objects, data structures that did not match intent, and methods with too many simultaneous semantic phases. The productized Skill now reviews these explicitly without imposing line-count thresholds or architecture rewrites.
 
 ## Repository structure
 
@@ -116,7 +120,7 @@ Prefer rule changes backed by:
 - a verified language/framework/library contract;
 - strong evidence of systematic harm.
 
-When a real failure is found, preserve it as a reproducible case before changing the Skill.
+When a real failure is found, preserve it as a reproducible case before changing the Skill when practical.
 
 ## License
 

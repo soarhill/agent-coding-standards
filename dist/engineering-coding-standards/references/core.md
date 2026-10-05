@@ -39,6 +39,34 @@ Prefer code that makes important decisions visible:
 
 A longer explicit implementation can be better than a shorter clever one.
 
+### Remove cognitive noise
+
+Do not keep structure that makes readers search for meaning that is not there.
+
+In touched code:
+
+- remove parameters or branches that do not affect behavior;
+- avoid call sites with multiple raw booleans when their meanings are not obvious;
+- prefer names, enums, or semantically distinct helpers when they make the choice clear without creating unnecessary machinery;
+- choose data structures that express the real intent: use a set for membership/existence, and a map when the value itself matters;
+- keep helper side effects visible. Avoid surprising mutation of caller-owned objects, especially when the same object is reused later under a different assumption.
+
+Do not introduce a new options type or abstraction merely to avoid one understandable boolean. The goal is lower cognitive load, not more types.
+
+### Split by semantic phase, not line count
+
+A method is a review trigger when understanding it requires tracking several independent phases, responsibilities, or mutable accumulators at once.
+
+When extraction genuinely helps, split around meaningful phases such as:
+
+- load;
+- classify;
+- aggregate;
+- transform;
+- assemble.
+
+Keep orchestration readable and keep each extracted step meaningful. Do not fragment a coherent algorithm into tiny pass-through helpers merely to shorten a method.
+
 ## Comment discipline
 
 Prefer code that explains **what it does** through naming and structure. Use comments for information the code cannot express clearly on its own.

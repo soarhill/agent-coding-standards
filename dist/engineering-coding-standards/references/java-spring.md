@@ -48,6 +48,14 @@ For `Collectors.toMap`:
 - fail-fast is valid when duplicates are invalid;
 - use a meaningful merge policy only when duplicates are legitimate.
 
+Choose the collection type that matches the semantics:
+
+- `Set` for membership / uniqueness / existence;
+- `Map` when both key and value carry meaning;
+- ordered variants only when iteration order is part of the behavior.
+
+Do not use a `Map<K, V>` as a disguised set when the values are irrelevant.
+
 For field mapping:
 
 - keep renamed fields, defaults, units, missing-value policy, and transformations visible;
@@ -56,11 +64,25 @@ For field mapping:
 
 Large mechanical mapping is a review trigger, not a domain-redesign command.
 
+## Mutable parameter objects
+
+Be explicit when helpers mutate caller-owned builders or parameter objects such as `MapSqlParameterSource`.
+
+If the caller reuses the same object for another query or operation, avoid hidden augmentation that changes later assumptions. Prefer a new parameter object, a clearly named mutating helper, or a local copy when that makes ownership easier to reason about.
+
 ## Streams
 
 Use Stream for short, pure, obvious transformations.
 
 Prefer a direct loop when branching, side effects, early exit, IO, or mutable assembly makes the loop easier to understand.
+
+## SQL composition
+
+Dynamic SQL helpers should expose semantic intent at their call sites.
+
+Avoid boolean mode parameters whose meaning is unclear from the call site, especially when multiple booleans appear together. If two branches currently produce the same fragment, remove the dead distinction rather than preserving a speculative mode.
+
+Keep query fragments named by what they mean, not by incidental implementation details.
 
 ## Spring-specific review trigger
 
