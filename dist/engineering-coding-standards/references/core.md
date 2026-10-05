@@ -53,6 +53,22 @@ In touched code:
 
 Do not introduce a new options type or abstraction merely to avoid one understandable boolean. The goal is lower cognitive load, not more types.
 
+### Preserve semantic structure
+
+When data naturally contains multiple named pieces of meaning, keep that structure visible instead of encoding it into an incidental representation only to decode it later.
+
+Prefer an existing domain type or a small local value type when it makes the relationship explicit.
+
+Be suspicious of:
+
+- delimiter-packed strings used as temporary multi-field values;
+- positional arrays/tuples whose indexes carry hidden meaning;
+- generic maps such as `Map<String, Object>` used only to avoid defining a clear shape.
+
+Encoding is appropriate at a real boundary or protocol when the contract requires it. Keep that encoding localized and decode once near the boundary.
+
+Do not introduce a type for a single obvious primitive merely to satisfy this rule.
+
 ### Split by semantic phase, not line count
 
 A method is a review trigger when understanding it requires tracking several independent phases, responsibilities, or mutable accumulators at once.

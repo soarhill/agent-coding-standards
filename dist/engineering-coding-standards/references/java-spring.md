@@ -78,6 +78,8 @@ Choose the collection type that matches the semantics:
 
 Do not use a `Map<K, V>` as a disguised set when the values are irrelevant.
 
+For small internal results with several named fields, an existing value type or a local `record` can be clearer than packing fields into a delimiter string or positional container, when the repository/JDK already supports that style.
+
 For field mapping:
 
 - keep renamed fields, defaults, units, missing-value policy, and transformations visible;

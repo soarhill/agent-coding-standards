@@ -28,6 +28,7 @@ The release package keeps only behavior-shaping guidance most likely to matter d
 - use names and local package/module organization that reveal responsibility;
 - remove cognitive noise such as dead distinctions and opaque boolean call sites;
 - make mutation/ownership visible and choose data structures that express intent;
+- preserve meaningful data shape instead of packing named values into incidental strings/containers only to decode them later;
 - split genuinely multi-phase work by semantic phase when that lowers cognitive load;
 - prefer lower cognitive load over fewer lines;
 - abstract shared meaning rather than repeated syntax;
@@ -50,17 +51,18 @@ The project has completed:
 6. Runtime Skill A/B validation with a Codex participant configuration;
 7. read-only smoke testing of the productized package;
 8. real-project calibration on code generated with the Skill;
-9. targeted naming/package/module validation against Alibaba P3C, Google Java Style, Oracle, Maven, Gradle, Vue, and npm guidance.
+9. targeted naming/package/module validation against Alibaba P3C, Google Java Style, Oracle, Maven, Gradle, Vue, and npm guidance;
+10. a reduced real-project regression case for semantic structure and intent.
 
-The benchmark rounds do not prove that the Skill always raises scores. They do support that the benchmarked runtime candidate did not systematically cause scope creep or over-engineering.
+The historical A/B rounds used the original six cases, so the new Case 07 does not retroactively change those scores.
 
-Real-project calibration showed that correctness and scope discipline alone are not enough: code can still be harder to read than necessary when it preserves no-op flags, hides mutation, uses data structures that obscure intent, makes one method coordinate too many semantic phases, or introduces weak/inconsistent names and organization.
+Real-project calibration showed that correctness and scope discipline alone are not enough: code can still be harder to read than necessary when it preserves no-op flags, hides mutation, uses data structures that obscure intent, coordinates too many semantic phases in one method, introduces weak names/organization, or encodes structured internal data into a delimiter string only to parse it again.
 
 The naming rules intentionally do **not** choose the application's architecture. They guide naming and local organization after a package/module/file boundary is already justified by the task and surrounding repository.
 
 ## Next phase
 
-Use the Skill on real projects.
+Use the Skill on real projects and run the new regression case before release.
 
 When a concrete bad behavior appears:
 

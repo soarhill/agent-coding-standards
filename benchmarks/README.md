@@ -12,6 +12,9 @@ This suite evaluates whether coding guidance improves or preserves engineering q
 | 04-promise-sse | async completion, failure, cancellation |
 | 05-vue-state | state meaning, list identity, local duplication |
 | 06-scope-control | focused bug fixing and scope discipline |
+| 07-structure-and-intent | semantic data shape, map-vs-set intent, proportional refactoring |
+
+Case 07 was added after real-project calibration and is **not** part of the historical six-case scores below.
 
 ## Completed experiment rounds
 
@@ -59,7 +62,7 @@ Result: 596 vs 591 / 600 (baseline vs treatment). No scope creep or over-enginee
 
 ## Experimental interpretation
 
-These six cases are **not** a statistical proof that the Skill helps or harms coding quality.
+The completed experiment rounds used the original six cases and are **not** a statistical proof that the Skill helps or harms coding quality.
 
 Important limitations:
 
@@ -107,9 +110,9 @@ A simple, explicit solution can and often should beat a framework-shaped one.
 
 ## Future benchmark work
 
-The current six cases are close to saturation for strong coding agents.
+The original six cases are close to saturation for strong coding agents. New cases should preferentially come from real failures.
 
-Prefer adding harder cases from real failures, for example:
+Examples:
 
 - transaction + remote-call boundaries;
 - multi-state workflows;

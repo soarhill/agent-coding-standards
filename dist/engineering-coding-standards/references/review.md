@@ -33,6 +33,8 @@ Review the **actual change**, not the whole repository.
 - Does any parameter, flag, branch, or helper imply a distinction that currently has no behavioral effect?
 - Are raw boolean arguments forcing the reader to jump to the callee to understand what `true` or `false` means?
 - Does a data structure express its actual semantics, or am I using a map when I only need membership?
+- Did I encode several named values into a delimiter string, positional container, or generic map only to decode them later?
+- If an external boundary requires encoding, is that encoding localized near the boundary?
 - Did a helper unexpectedly mutate an object the caller later reuses?
 - Does one method make the reader track several independent phases or mutable accumulators at once?
 - If so, is there a small semantic extraction that lowers cognitive load without creating a new framework?
