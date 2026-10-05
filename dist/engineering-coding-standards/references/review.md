@@ -17,6 +17,8 @@ Review the **actual change**, not the whole repository.
 - Are important validation, mapping, defaults, units, and state transitions visible?
 - Did any helper/type/layer reduce cognitive load more than it added navigation or machinery?
 - Did I compress code merely to reduce lines?
+- Is any non-obvious business rule, invariant, workaround, boundary, concurrency, or lifecycle decision missing the explanation a future maintainer would need?
+- Did I add comments that merely repeat the code, compensate for weak naming, or leave comments that are now stale?
 
 ## Anti-overengineering
 

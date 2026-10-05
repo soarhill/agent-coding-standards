@@ -35,6 +35,7 @@ It focuses on a small set of behaviors that coding agents commonly get wrong:
 - conflating failure, absence, state, completion, or cancellation;
 - cleaning up the wrong resource/handle;
 - optimizing for fewer lines instead of lower cognitive load;
+- writing no explanation for non-obvious rules, or adding comments that merely narrate obvious code;
 - ignoring reasonable repository-local conventions;
 - finishing without reviewing the real diff or verification signal.
 

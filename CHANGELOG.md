@@ -2,7 +2,7 @@
 
 All notable project changes are recorded here.
 
-## [0.1.0] - 2026-10-04
+## [0.1.0] - 2026-10-05
 
 First productized runtime release.
 
@@ -14,6 +14,7 @@ First productized runtime release.
   - Java/Spring;
   - Vue/JavaScript/TypeScript;
   - final review.
+- Comment/documentation discipline covering useful implementation comments, repository-local comment language, stale comments, and Java API contract documentation.
 - Research-oriented candidate rules v1.1.
 - Six-case coding benchmark suite.
 - Cooperative sub-Agent/worktree isolation runbook.
@@ -27,21 +28,13 @@ First productized runtime release.
 - Kept `skill/` unchanged as benchmark provenance.
 - Removed runtime-only duplication between anti-pattern and checklist references.
 - Removed research history and generic handbook material from the installable package.
-- Kept the runtime focus on scope discipline, truthful contracts, lifecycle correctness, reviewable mappings, local consistency, and proportional abstraction.
+- Kept the runtime focus on scope discipline, truthful contracts, lifecycle correctness, reviewable mappings, useful comments, local consistency, and proportional abstraction.
 
 ### Validation summary
 
 Benchmark rounds did not demonstrate a stable score improvement, but they also did not show systematic scope creep or over-engineering.
 
-The final `dist/` package passed a read-only smoke test with:
-
-- no blocking issues;
-- all reference paths present;
-- no dependency on files outside the package;
-- expected progressive-disclosure behavior for Java/Spring and Vue/JS tasks;
-- no runtime research/benchmark/history material.
-
-Non-blocking observations were intentionally not used to reopen the Skill before release.
+The productized package previously passed a read-only smoke test with no blocking issues. The comment discipline added before release is a small, evidence-backed restoration of guidance already present in the research standard rather than a new architectural or framework rule.
 
 ### Known limitations
 

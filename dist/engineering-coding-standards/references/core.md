@@ -39,6 +39,26 @@ Prefer code that makes important decisions visible:
 
 A longer explicit implementation can be better than a shorter clever one.
 
+## Comment discipline
+
+Prefer code that explains **what it does** through naming and structure. Use comments for information the code cannot express clearly on its own.
+
+Add or preserve comments when they explain:
+
+- why a non-obvious decision exists;
+- a business rule or invariant that is easy to accidentally break;
+- boundary, failure, concurrency, ownership, or lifecycle reasoning;
+- an assumption imposed by an external API, protocol, framework, or compatibility constraint;
+- an intentional workaround whose simpler-looking alternative would be wrong.
+
+Do not add comments that merely narrate obvious code. Avoid comments such as “check whether user is null”, “loop through the list”, or numbered step comments that only restate the implementation.
+
+Do not use comments to compensate for poor naming or structure. Remove obsolete commented-out implementations instead of keeping dead code as history.
+
+When behavior changes, update or remove comments that are no longer true.
+
+Follow the repository's existing convention for comment language, Javadoc/JSDoc usage, and comment style. If no clear language convention exists, use the language that communicates the reasoning most clearly to the expected maintainers. Keep identifiers, API/protocol names, technical keywords, and proper nouns in their original form.
+
 ## Abstract meaning, not shape
 
 Extract a helper/type/layer when it represents a real shared concept or shared reason to change and reduces cognitive load.

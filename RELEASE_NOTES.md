@@ -18,17 +18,18 @@ references/vue-js-ts.md
 references/review.md
 ```
 
-## What changed during productization
+## What it focuses on
 
-The benchmarked candidate under `skill/` was useful but still carried some handbook-like and duplicated guidance.
-
-The release package keeps only the behavior-shaping rules most likely to matter during coding:
+The release package keeps only behavior-shaping guidance most likely to matter during coding:
 
 - stay inside the authorized scope;
 - keep failure/state/async/cleanup contracts truthful;
 - keep important mapping semantics visible;
 - prefer lower cognitive load over fewer lines;
 - abstract shared meaning rather than repeated syntax;
+- write comments for non-obvious why/constraints/contracts rather than narrating obvious code;
+- follow the repository's existing comment language and documentation conventions;
+- use Javadoc for meaningful Java API contracts without documenting every trivial member;
 - respect reasonable repository conventions;
 - review the real diff and real verification signal before finishing.
 
@@ -44,17 +45,11 @@ The project has completed:
 4. full-standard calibration;
 5. Runtime Skill A/B validation with GLM-5.3;
 6. Runtime Skill A/B validation with a Codex participant configuration;
-7. final read-only smoke testing of the productized package.
-
-The smoke test passed with no blocking issues. The package is self-contained, all references resolve internally, and simulated Java / Vue usage follows the intended progressive-disclosure path.
+7. read-only smoke testing of the productized package.
 
 The benchmark rounds do not prove that the Skill always raises scores. They do support that the benchmarked runtime candidate did not systematically cause scope creep or over-engineering.
 
-## Why no more pre-release edits
-
-The smoke test reported only non-blocking observations. Those are deliberately left for real-world usage rather than triggering another pre-release rewrite.
-
-This keeps v0.1.0 evidence-driven instead of repeatedly tuning wording to hypothetical edge cases.
+Before release, comment/documentation discipline was restored from the research standard and tightened using official Alibaba, Google, and Oracle guidance: code should remain self-explanatory where possible, comments should carry non-obvious intent and constraints, and comment language should follow repository/team convention rather than being hard-coded globally.
 
 ## Next phase
 

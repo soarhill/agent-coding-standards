@@ -11,6 +11,25 @@ Load this only for relevant Java/Spring work.
 
 Do not move business rules into Bean Validation merely because an annotation can express part of the condition.
 
+## Javadoc and API contracts
+
+Use Javadoc when callers need contract information that names and types alone do not make clear.
+
+Prioritize it for:
+
+- public or protected APIs with non-obvious behavior;
+- interfaces and abstract methods whose implementations must obey a contract;
+- parameters with special units, ranges, nullability, ordering, or sentinel meanings;
+- return values with important absence/state semantics;
+- declared or meaningful exceptional behavior;
+- compatibility, lifecycle, or usage constraints callers must know.
+
+Do not mechanically add Javadoc to trivial getters/setters or methods whose contract is already obvious from the signature and surrounding repository convention.
+
+Javadoc should describe the caller-visible contract and important constraints, not translate the method name into prose.
+
+Follow the repository's existing Javadoc language and formatting convention.
+
 ## Exceptions and logging
 
 - Preserve the original cause when translating unexpected exceptions.
